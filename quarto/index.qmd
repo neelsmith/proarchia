@@ -1,0 +1,10 @@
+---
+title: "Cicero, *Pro Archia*"
+---
+
+*Project currently in planning stages only.*
+
+This web site is planned to include a readable text of Cicero's *Pro Archia* with a variety of visualizations presenting syntactic analysis of the text.
+
+
+

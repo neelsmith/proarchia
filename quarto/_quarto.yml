@@ -1,0 +1,37 @@
+project:
+  type: website
+  output-dir: quarto-build
+
+version: "0.1.0"  
+  
+
+website:
+  title: "proarchia"
+  page-footer:
+    center: "Documentation for release version **{{< meta version >}}**"
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+                 
+    right:   
+      - icon: github
+        menu:
+          - text: "proarchia on github"
+            href: https://github.com/neelsmith/proarchia
+          - text: "About me"
+            href: https://neelsmith.github.io
+          - text: "Other projects"
+            href: https://neelsmith.github.io/projects 
+   
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+
