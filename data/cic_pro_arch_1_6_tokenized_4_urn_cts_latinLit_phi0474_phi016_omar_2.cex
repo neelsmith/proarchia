@@ -1,0 +1,57 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:2.2.t0-urn:cts:latinLit:phi0474.phi016.omar:2.2.t36
+REASONING=The sentence's main (independent) verb is the compound perfect "dediti fuimus" ("not even we have ever been wholly devoted to this one pursuit"); "dediti" (the participle) anchors the verbal expression and "fuimus" relates to it as 'auxiliary'. "ac" opens the sentence and introduces that verb (one-sided coordinating conjunction). "ne ... miretur" is a dependent (negative purpose) clause: "ne" (2.t1) is the subordinating conjunction pointing to the main verb "dediti", and "miretur" has 'unit verb' → "ne". "miretur" governs the indirect statement anchored by the passive infinitive "dici" ("hoc" its accusative subject, "a nobis" the agent, "ita" adverbial); "forte" modifies "miretur". The causal "quod ... sit" clause gives the reason someone might wonder, so "quod" is attached to "miretur" (relationship 'subordinating conjunction'); "sit" has 'unit verb' → "quod". I note a genuine ambiguity here: "quod" could conceivably be construed with "dici" (the content of what is said) rather than with "miretur"; I chose "miretur" because the subjunctive "sit" marks it as the reported ground for the wondering. "sit" is existential/linking with "facultas" (with "alia", "quaedam" adjectival and "ingeni" genitive) as subject; "in hoc" is adverbial to it. The second limb, "neque haec dicendi ratio aut disciplina", has no expressed verb: an elided "sit" (tokentype 'implied sum', bare-predicate sub-case) anchoring a dependent linking-verb expression inside the same quod clause, with "ratio" and "disciplina" (joined by "aut") as its subjects and "dicendi" (a gerund in the genitive) depending on "ratio". "neque" coordinates "sit" with this implied verb. "ne ... quidem" ("not even") is treated as two adverbial particles modifying the main verb; "nos" is its subject, "huic uni studio" a dative with "dediti", "penitus" and "umquam" adverbial. I classify "dediti fuimus" as transitive passive (participle of *dedo*); it could alternatively be read as a linking verb with "dediti" as a predicate adjective, but the compound-passive reading is preferred as the participle retains its verbal force with the dative.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t0|urn:cts:latinLit:phi0474.phi016.omar:2|2.t36
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t9|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t7|indirect statement|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t17|dependent|linking verb
+|2.t24_implied|dependent|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t34|independent|transitive passive
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t0|lexical|ac|ac||2.t34|coordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t1|lexical|ne|ne||2.t34|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t2|lexical|quis|quis||2.t9|subject||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t3|lexical|a|a||2.t7|agent||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t4|lexical|nobis|nos||2.t3|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t5|lexical|hoc|hic||2.t7|subject||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t6|lexical|ita|ita||2.t7|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t7|lexical|dici|dico|2.t7|2.t9|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t8|lexical|forte|forte||2.t9|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t9|lexical|miretur|miror|2.t9|2.t1|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t10|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t11|lexical|quod|quod||2.t9|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t12|lexical|alia|alius||2.t16|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t13|lexical|quaedam|quidam||2.t16|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t14|lexical|in|in||2.t17|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t15|lexical|hoc|hic||2.t14|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t16|lexical|facultas|facultas||2.t17|subject||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t17|lexical|sit|sum|2.t17|2.t11|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t18|lexical|ingeni|ingenium||2.t16|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t19|lexical|neque|neque||2.t17|coordinating conjunction|2.t24_implied|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t20|lexical|haec|hic||2.t22|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t21|lexical|dicendi|dico||2.t22|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t22|lexical|ratio|ratio||2.t24_implied|subject||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t23|lexical|aut|aut||2.t22|coordinating conjunction|2.t24|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t24|lexical|disciplina|disciplina||2.t24_implied|subject||
+|2.t24_implied|implied sum||sum|2.t24_implied|2.t11|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t25|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t26|lexical|ne|ne||2.t34|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t27|lexical|nos|nos||2.t34|subject||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t28|lexical|quidem|quidem||2.t34|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t29|lexical|huic|hic||2.t31|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t30|lexical|uni|unus||2.t31|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t31|lexical|studio|studium||2.t34|dative||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t32|lexical|penitus|penitus||2.t34|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t33|lexical|umquam|umquam||2.t34|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t34|lexical|dediti|dedo|2.t34|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t35|lexical|fuimus|sum||2.t34|auxiliary||
+urn:cts:latinLit:phi0474.phi016.omar:2|2.t36|punctuation|.||||||

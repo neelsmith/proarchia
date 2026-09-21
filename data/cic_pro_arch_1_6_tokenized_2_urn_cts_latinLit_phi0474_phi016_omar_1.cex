@@ -1,0 +1,53 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:1.1.t72-urn:cts:latinLit:phi0474.phi016.omar:1.1.t105
+REASONING=The sentence has one independent verb, **video** (t92), which governs an indirect statement anchored by the infinitive **exstitisse** (t104), with **hunc** (t91) as its accusative subject and **principem** (t94) as predicate noun (exsisto here functions as a linking verb, "turned out to be my leader"). The **quoad** clause (t73–t86) is a dependent clause: *quoad* is the subordinating conjunction pointing at *video*, and **potest** (t75) is its verb, with *mens mea* as subject and two coordinated complementary infinitives, **respicere** (t78) and **recordari** (t85), joined by *et* (t82). Complementary infinitives are not themselves verbal expressions, so they get no `verbalunits` entry; each keeps its own object (*spatium*, *memoriam*) as if finite. *praeteriti* modifies *temporis*, which is a genitive on *spatium*; *pueritiae* is a genitive on *memoriam*, and *ultimam* is adjectival with *memoriam*. **longissime** (t74): I attach it adverbially to *potest*, though it could plausibly be read as modifying *respicere* ("look back as far as possible"). The idiom *quoad longissime potest* ("as far back as it possibly can") makes the modal verb the more natural head, so I chose *potest*; this is a genuine close call. **repetens** (t90) is a predicate/circumstantial participle agreeing with the unexpressed subject ("I") of *video*, so I add an implied-subject token (1.t89_implied) taking the 'subject' relation into *video*, with *repetens* relating to it via 'circumstantial participle'. I treat *repetens* as intransitive here ("tracing back from that point"), since it has no expressed object; *inde* and *usque* are adverbs modifying it. **nam** opens the sentence with no verb to its left to pair with, so it takes only relatedtoken1 -> *video*. The two *ad*-phrases form the "et A et B" polysyndeton shape: the first *et* (t95) is introductory (only relatedtoken1 -> t96, the first *ad*), the second *et* (t98) relates to both prepositions (t96, t99). *suscipiendam* and *ingrediendam* are gerundives, hence plain adjectivals agreeing with **rationem**, which is the object of the (nearer, second) preposition *ad*. *horum studiorum* is a genitive on *rationem*.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t72|urn:cts:latinLit:phi0474.phi016.omar:1|1.t105
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t75|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t90|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t92|independent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t104|indirect statement|linking verb
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t72|lexical|nam|nam||1.t92|coordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t73|lexical|quoad|quoad||1.t92|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t74|lexical|longissime|longe||1.t75|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t75|lexical|potest|possum|1.t75|1.t73|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t76|lexical|mens|mens||1.t75|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t77|lexical|mea|meus||1.t76|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t78|lexical|respicere|respicio||1.t75|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t79|lexical|spatium|spatium||1.t78|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t80|lexical|praeteriti|praetereo||1.t81|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t81|lexical|temporis|tempus||1.t79|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t82|lexical|et|et||1.t78|coordinating conjunction|1.t85|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t83|lexical|pueritiae|pueritia||1.t84|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t84|lexical|memoriam|memoria||1.t85|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t85|lexical|recordari|recordor||1.t75|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t86|lexical|ultimam|ultimus||1.t84|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t87|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t88|lexical|inde|inde||1.t90|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t89|lexical|usque|usque||1.t90|adverbial||
+|1.t89_implied|implied subject||ego||1.t92|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t90|lexical|repetens|repeto|1.t90|1.t89_implied|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t91|lexical|hunc|hic||1.t104|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t92|lexical|video|video|1.t92|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t93|lexical|mihi|ego||1.t104|dative||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t94|lexical|principem|princeps||1.t104|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t95|lexical|et|et||1.t96|coordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t96|lexical|ad|ad||1.t104|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t97|lexical|suscipiendam|suscipio||1.t101|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t98|lexical|et|et||1.t96|coordinating conjunction|1.t99|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t99|lexical|ad|ad||1.t104|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t100|lexical|ingrediendam|ingredior||1.t101|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t101|lexical|rationem|ratio||1.t99|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t102|lexical|horum|hic||1.t103|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t103|lexical|studiorum|studium||1.t101|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t104|lexical|exstitisse|exsisto|1.t104|1.t92|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t105|punctuation|.||||||

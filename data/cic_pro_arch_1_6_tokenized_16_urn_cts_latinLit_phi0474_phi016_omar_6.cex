@@ -1,0 +1,95 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:6.6.t0-urn:cts:latinLit:phi0474.phi016.omar:6.6.t70
+REASONING=The passage is a series of coordinated independent clauses describing Archias' relations (subject unexpressed throughout): **erat** (linking, with predicate *iucundus* and datives *Metello ... filio*), **audiebatur** (passive, agent *a M. Aemilio*), **vivebat** (intransitive, *cum Q. Catulo et patre et filio*), **colebatur** (passive, agent *a L. Crasso*), and **adficiebatur** (passive, *summo honore*), the last preceded by a *cum*-clause (**teneret**) and followed by a causal *quod*-clause (**colebant**), which itself contains a relative clause (**studebant**) and a conditional clause (**simulabant**). Notes on specific calls: - **devinctam** (t44): I take it as a predicate (circumstantial) participle with *teneret* ("held them bound by intimacy") rather than as a purely attributive modifier of *domum*, in line with the preference for the circumstantial reading; it agrees grammatically with *domum* (the nearest of the coordinated objects), so it points there via 'circumstantial participle'. An attributive reading ("the whole house of the Hortensii, bound by...") is defensible, hence the flag. - **qui** (t58): its antecedent is unexpressed — the relative clause as a whole serves as the subject of *colebant*. Rather than invent an antecedent token (the 'implied subject' type is reserved for participial antecedents), I give *qui* a 'subject' relation into *colebant* (the role the headless relative clause fills) and a second 'subject' relation into its own verb *studebant*, which takes 'unit verb' -> *qui*. An alternative would be to label the link to *colebant* 'relative pronoun'; I preferred the functional 'subject'. - **verum** (t64): taken as the adversative correlative of *non solum*, coordinating the two subject-expressions (*studebant* clause and the *si*-clause with *simulabant*). - **si qui** (t67): *qui* here is the indefinite (= *aliqui*), subject of *simulabant*, not a relative. - *percipere*/*audire* are complementary infinitives of *studebant*, so they anchor no verbal expression; *aliquid* is the object of *percipere*. - *simulabant* has no expressed object, so I classify it intransitive.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t0|urn:cts:latinLit:phi0474.phi016.omar:6|6.t70
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t0|independent|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t13|independent|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t18|independent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t30|independent|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t44|dependent|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t47|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t49|independent|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t57|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t63|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t69|dependent|intransitive
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t0|lexical|erat|sum|6.t0|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t1|lexical|temporibus|tempus||6.t0|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t2|lexical|illis|ille||6.t1|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t3|lexical|iucundus|iucundus||6.t0|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t4|praenomen|Q.|Quintus||6.t5|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t5|lexical|Metello|Metellus||6.t0|dative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t6|lexical|illi|ille||6.t5|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t7|lexical|Numidico|Numidicus||6.t5|apposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t8|lexical|et|et||6.t5|coordinating conjunction|6.t11|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t9|lexical|eius|is||6.t11|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t10|lexical|Pio|Pius||6.t11|apposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t11|lexical|filio|filius||6.t0|dative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t12|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t13|lexical|audiebatur|audio|6.t13|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t14|lexical|a|a||6.t13|agent||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t15|praenomen|M.|Marcus||6.t16|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t16|lexical|Aemilio|Aemilius||6.t14|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t17|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t18|lexical|vivebat|vivo|6.t18|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t19|lexical|cum|cum||6.t18|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t20|praenomen|Q.|Quintus||6.t21|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t21|lexical|Catulo|Catulus||6.t19|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t22|lexical|et|et||6.t21|coordinating conjunction|6.t23|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t23|lexical|patre|pater||6.t19|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t24|lexical|et|et||6.t23|coordinating conjunction|6.t25|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t25|lexical|filio|filius||6.t19|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t26|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t27|lexical|a|a||6.t30|agent||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t28|praenomen|L.|Lucius||6.t29|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t29|lexical|Crasso|Crassus||6.t27|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t30|lexical|colebatur|colo|6.t30|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t31|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t32|lexical|Lucullos|Lucullus||6.t47|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t33|lexical|vero|vero||6.t47|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t34|lexical|et|et||6.t32|coordinating conjunction|6.t35|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t35|lexical|Drusum|Drusus||6.t47|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t36|lexical|et|et||6.t35|coordinating conjunction|6.t37|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t37|lexical|Octavios|Octavius||6.t47|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t38|lexical|et|et||6.t37|coordinating conjunction|6.t39|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t39|lexical|Catonem|Cato||6.t47|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t40|lexical|et|et||6.t39|coordinating conjunction|6.t43|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t41|lexical|totam|totus||6.t43|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t42|lexical|Hortensiorum|Hortensius||6.t43|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t43|lexical|domum|domus||6.t47|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t44|lexical|devinctam|devincio|6.t44|6.t43|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t45|lexical|consuetudine|consuetudo||6.t44|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t46|lexical|cum|cum||6.t49|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t47|lexical|teneret|teneo|6.t47|6.t46|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t48|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t49|lexical|adficiebatur|adficio|6.t49|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t50|lexical|summo|summus||6.t51|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t51|lexical|honore|honos||6.t49|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t52|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t53|lexical|quod|quod||6.t49|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t54|lexical|eum|is||6.t57|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t55|lexical|non|non||6.t57|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t56|lexical|solum|solum||6.t57|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t57|lexical|colebant|colo|6.t57|6.t53|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t58|lexical|qui|qui||6.t57|subject|6.t63|subject
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t59|lexical|aliquid|aliquis||6.t60|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t60|lexical|percipere|percipio||6.t63|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t61|lexical|atque|atque||6.t60|coordinating conjunction|6.t62|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t62|lexical|audire|audio||6.t63|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t63|lexical|studebant|studeo|6.t63|6.t58|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t64|lexical|verum|verum||6.t63|coordinating conjunction|6.t69|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t65|lexical|etiam|etiam||6.t69|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t66|lexical|si|si||6.t57|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t67|lexical|qui|qui||6.t69|subject||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t68|lexical|forte|forte||6.t69|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t69|lexical|simulabant|simulo|6.t69|6.t66|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t70|punctuation|.||||||

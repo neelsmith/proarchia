@@ -1,0 +1,98 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:1.1.t0-urn:cts:latinLit:phi0474.phi016.omar:1.1.t71
+REASONING=Structure: three coordinated conditional protases ("si quid est...", "aut si qua exercitatio dicendi [est]...", "aut si huiusce rei ratio aliqua ... profecta [est]"), each with its own relative clause, all subordinate to the main clause "hic A. Licinius fructum a me repetere prope suo iure debet." - 1.t2 "est" is the existential verb of the first protasis (dependent on "si" 1.t0, which subordinates to "debet"); "quid" is its subject, "ingeni" a partitive genitive depending on "quid", "in me" adverbial. - "quod sentio quam sit exiguum": "quod" is a relative pronoun whose antecedent is "quid" (1.t1) and is at the same time the proleptic direct object of "sentio" (slot 2). "sentio" is the dependent verb of that relative clause; "quam" introduces an indirect question and is treated like a subordinating conjunction (-> "sentio"), with "sit" (linking) as its dependent verb and "exiguum" as predicate. - Second protasis has no expressed verb ("aut si qua exercitatio dicendi"): an elided present of *sum*, so an 'implied sum' token (1.t19_implied) anchors a dependent verbal expression; "exercitatio" is its subject, "qua" (indefinite) adjectival, "dicendi" a gerund in the genitive depending on "exercitatio". Since the construction is existential rather than subject+predicate-noun, I classified it 'intransitive', matching 1.t2 "est". - "in qua me non infitior mediocriter esse versatum": "qua" is relative (antecedent "exercitatio") and object of the preposition "in"; "infitior" is the relative clause's dependent verb; "versatum (esse)" anchors the indirect statement (participle anchors, "esse" is its auxiliary), with "me" as accusative subject. - Third protasis: "profecta" with omitted auxiliary = compound perfect (deponent *proficiscor*), so "profecta" itself anchors the dependent verbal expression and an 'implied sum' token (1.t42_implied) relates to it as auxiliary; "ratio" is subject, "ab ... studiis ac disciplina" adverbial with "ac" coordinating the two ablative objects. - "a qua ego nullum confiteor aetatis meae tempus abhorruisse": "confiteor" is the relative clause's verb, "abhorruisse" the governed indirect-statement infinitive with "tempus" as its accusative subject; "a" (1.t44) is adverbial to "abhorruisse" (source, not agent — the verb is active). - Main clause: "debet" (independent, transitive active) with complementary infinitive "repetere"; "fructum" is "repetere"'s object, "earum rerum omnium" genitive depending on "fructum", "a me" adverbial to "repetere", "suo iure" ablative of manner with "repetere". Judgment calls flagged: - Antecedent of "a qua" (1.t45): it could be "ratio" (1.t34) or the nearer "disciplina" (1.t41); I chose "disciplina" as the nearest feminine singular and the more natural source for "abhorrere a", but "ratio" is defensible. - "iudices" (1.t7) stands physically inside the first si-clause but addresses the whole sentence; I related it to the main verb "debet" rather than to "est". - The adverbs "vel" (1.t57) and "prope" (1.t67) intensify a phrase rather than a verb; I attached "vel" to "in" (1.t58, head of "in primis") and "prope" to "iure" (1.t69), rather than to the main verb. - "quod" (1.t9) as proleptic object of "sentio" vs. subject of "sit": I took the proleptic-object reading (its relative-pronoun slot is already used for the antecedent link, so no further slot is available for a subject link to "sit").
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t0|urn:cts:latinLit:phi0474.phi016.omar:1|1.t71
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t2|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t10|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t12|dependent|linking verb
+|1.t19_implied|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t25|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t28|indirect statement|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t42|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t48|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t52|indirect statement|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t70|independent|transitive active
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t0|lexical|si|si||1.t70|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t1|lexical|quid|quis||1.t2|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t2|lexical|est|sum|1.t2|1.t0|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t3|lexical|in|in||1.t2|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t4|lexical|me|ego||1.t3|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t5|lexical|ingeni|ingenium||1.t1|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t6|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t7|lexical|iudices|iudex||1.t70|vocative||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t8|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t9|lexical|quod|qui||1.t1|relative pronoun|1.t10|direct object
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t10|lexical|sentio|sentio|1.t10|1.t9|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t11|lexical|quam|quam||1.t10|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t12|lexical|sit|sum|1.t12|1.t11|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t13|lexical|exiguum|exiguus||1.t12|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t14|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t15|lexical|aut|aut||1.t2|coordinating conjunction|1.t19_implied|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t16|lexical|si|si||1.t70|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t17|lexical|qua|quis||1.t18|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t18|lexical|exercitatio|exercitatio||1.t19_implied|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t19|lexical|dicendi|dico||1.t18|genitive||
+|1.t19_implied|implied sum||sum|1.t19_implied|1.t16|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t20|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t21|lexical|in|in||1.t28|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t22|lexical|qua|qui||1.t18|relative pronoun|1.t21|object of preposition
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t23|lexical|me|ego||1.t28|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t24|lexical|non|non||1.t25|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t25|lexical|infitior|infitior|1.t25|1.t22|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t26|lexical|mediocriter|mediocriter||1.t28|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t27|lexical|esse|sum||1.t28|auxiliary||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t28|lexical|versatum|versor|1.t28|1.t25|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t29|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t30|lexical|aut|aut||1.t19_implied|coordinating conjunction|1.t42|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t31|lexical|si|si||1.t70|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t32|lexical|huiusce|hic||1.t33|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t33|lexical|rei|res||1.t34|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t34|lexical|ratio|ratio||1.t42|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t35|lexical|aliqua|aliquis||1.t34|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t36|lexical|ab|ab||1.t42|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t37|lexical|optimarum|bonus||1.t38|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t38|lexical|artium|ars||1.t39|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t39|lexical|studiis|studium||1.t36|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t40|lexical|ac|atque||1.t39|coordinating conjunction|1.t41|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t41|lexical|disciplina|disciplina||1.t36|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t42|lexical|profecta|proficiscor|1.t42|1.t31|unit verb||
+|1.t42_implied|implied sum||sum||1.t42|auxiliary||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t43|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t44|lexical|a|a||1.t52|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t45|lexical|qua|qui||1.t41|relative pronoun|1.t44|object of preposition
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t46|lexical|ego|ego||1.t48|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t47|lexical|nullum|nullus||1.t51|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t48|lexical|confiteor|confiteor|1.t48|1.t45|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t49|lexical|aetatis|aetas||1.t51|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t50|lexical|meae|meus||1.t49|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t51|lexical|tempus|tempus||1.t52|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t52|lexical|abhorruisse|abhorreo|1.t52|1.t48|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t53|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t54|lexical|earum|is||1.t55|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t55|lexical|rerum|res||1.t63|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t56|lexical|omnium|omnis||1.t55|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t57|lexical|vel|vel||1.t58|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t58|lexical|in|in||1.t70|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t59|lexical|primis|primus||1.t58|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t60|lexical|hic|hic||1.t62|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t61|praenomen|A.|Aulus||1.t62|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t62|lexical|Licinius|Licinius||1.t70|subject||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t63|lexical|fructum|fructus||1.t66|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t64|lexical|a|a||1.t66|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t65|lexical|me|ego||1.t64|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t66|lexical|repetere|repeto||1.t70|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t67|lexical|prope|prope||1.t69|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t68|lexical|suo|suus||1.t69|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t69|lexical|iure|ius||1.t66|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t70|lexical|debet|debeo|1.t70|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:1|1.t71|punctuation|.||||||
