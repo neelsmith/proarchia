@@ -159,3 +159,110 @@ open, its autosave will keep clobbering any change made to the file from
 outside that session with whatever it still has loaded in the browser --
 reloading the page in the browser after an outside edit (or saving/closing
 before one) avoids this.
+
+## 2026-09-21 -- split into reader.py and reader_w_graphviz.py
+
+Neel asked to rename `review_analyses.py` to `reader.py`, and add a second
+notebook, `reader_w_graphviz.py`, that adds the option of viewing a
+sentence's syntax graph as a Graphviz digraph.
+
+Read this as: `reader.py` going forward is the lean version (Mermaid/
+displaCy only, no Graphviz-related code or dependency at all), and
+`reader_w_graphviz.py` is that same notebook plus Graphviz layered back
+in as a third diagram-tool option -- rather than both notebooks ending up
+identical, which would make "adds ... the option" a no-op.
+
+What I did:
+
+- `mv marimo/review_analyses.py marimo/reader.py` (an actual rename, not
+  delete + recreate).
+- Saved a copy of reader.py's pre-edit content (which already had all
+  three diagram tools working, from earlier work) as
+  `marimo/reader_w_graphviz.py`, and added `graphviz` (the PyPI wrapper
+  package) to its own PEP 723 `dependencies` list -- since offering that
+  option is this notebook's whole reason to exist, unlike reader.py where
+  it was only ever an optional, try/except import.
+- Stripped every Graphviz-related piece back out of `reader.py`: the
+  `graphviz` try/except import (and `graphviz`/`graphviz_available` from
+  that cell's returned names), the `tokengraph_to_dot` import and the
+  cell that computed `dot_source`/`dot_warnings` from it, the "graphviz"
+  branch in both the diagram-display and diagram-download cells, and the
+  `graphviz_available` conditional on the diagram-tool radio (now always
+  just `["mermaid", "displacy"]`).
+- Left a one-line pointer in reader.py's diagram-display cell noting that
+  reader_w_graphviz.py offers Graphviz too, for anyone reading the code
+  who wonders why it's missing.
+
+Verified both notebooks for real on this machine (not just in my own
+sandbox) with `uv run --isolated --no-project --with marimo --with
+"arsgrammatica @ git+..." [--with graphviz] -- python3 -m marimo export
+html ...`, against the actual `data/` files:
+- `reader.py`: diagram-tool radio resolves to exactly `["mermaid",
+  "displacy"]`, sentence menu still lists all 17 sentences correctly, no
+  errors.
+- `reader_w_graphviz.py`: diagram-tool radio resolves to `["mermaid",
+  "graphviz", "displacy"]`. This machine already has both the `graphviz`
+  PyPI package's dependency (`dot`) on PATH and the package itself
+  installs cleanly, so this actually exercised real SVG rendering via
+  `graphviz.Source(...).pipe(format="svg")`, not just the
+  package-missing/executable-missing fallback paths. No errors either
+  way.
+
+Also cleaned up build-artifact clutter this session's own testing left
+behind: removed the stale `marimo/__pycache__/` (including a `.pyc` for
+the now-gone `review_analyses.py`), and added `__pycache__/` and
+`marimo/__marimo__/` to `.gitignore` so neither gets committed going
+forward. Did not touch `marimo/__marimo__/` itself -- that's Neel's own
+live `marimo edit` session state, not mine to remove.
+
+Left uncommitted, as always -- `git status` shows the rename (as a
+delete + two new files, since content diverged too) plus the `.gitignore`
+change.
+
+## 2026-09-21 -- fix broken Graphviz digraphs (not just noisy warnings)
+
+Neel reported a stream of warnings like `Warning: syntax ambiguity -
+badly delimited number '6.t' in line 5 of <stdin> splits into two
+tokens` when choosing the Graphviz option in `reader_w_graphviz.py`.
+
+Traced this to arsgrammatica's own `tokengraph_to_dot()` (arsgrammatica/
+dot.py): it writes each token's id -- "1.t2", "1.t19_implied", etc. -- as
+a BARE, unquoted DOT identifier, both as a node's own name and in every
+`->` edge referencing it. DOT's grammar has no identifier form that
+starts with a digit and also contains letters; the closest thing, a
+numeral, allows only digits and a single ".", so Graphviz's own lexer
+reads "1.t2" as the numeral "1." immediately followed by a separate
+identifier "t2" -- hence the warning.
+
+This turned out to be a real correctness bug, not just noise: rendered
+without a fix, EVERY token id sharing the same leading "N." (e.g. every
+"1.tNN" token) collapses onto one shared, malformed node literally named
+"1." in the output graph -- confirmed by rendering a real sentence's DOT
+source both ways and comparing SVG node/edge titles: unpatched, edges
+that should read e.g. "1.t72 -> 1.t92" instead read "t72 -> 1." (a bogus
+node merging every "1.*" token's edges together); patched, they read
+correctly.
+
+Added a `quote_dot_token_ids()` helper (an `@app.function`, same
+convention as `sentence_label`/`analysis_sort_key`) to
+`marimo/reader_w_graphviz.py` only -- `reader.py` doesn't offer Graphviz
+at all, so it's unaffected -- that wraps every bare token-id-shaped
+identifier in the DOT source in quotes via
+`re.sub(r"\b(\d+\.t\d+(?:_implied)?)\b", r'"\1"', dot_source)` before it's
+used anywhere downstream (both the live SVG render and the "Download
+Graphviz DOT source (.dot)" button now get the corrected source). Applied
+in the cell that calls `tokengraph_to_dot()`, right after the call.
+
+Verified on this machine with real data and the real `dot` executable
+(not just the fallback path): before the fix, `dot -Tsvg` on a real
+sentence's DOT source printed dozens of "badly delimited number"
+warnings and silently merged nodes; after, zero warnings, and the SVG's
+node/edge titles show each token as its own distinct node with the
+correct governor. Also ran the whole notebook through `uv run --isolated
+--with marimo --with arsgrammatica --with graphviz -- python3 -m marimo
+export html marimo/reader_w_graphviz.py` end to end afterward -- no
+errors, no leftover warnings.
+
+This is a workaround living in this repo's own notebook, not a fix to
+arsgrammatica itself (not this project's package to change) -- worth
+reporting upstream at some point, but out of scope here.

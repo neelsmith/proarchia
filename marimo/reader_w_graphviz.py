@@ -3,6 +3,7 @@
 # dependencies = [
 #     "marimo",
 #     "arsgrammatica",
+#     "graphviz",
 # ]
 #
 # [tool.uv.sources]
@@ -10,6 +11,14 @@
 # # directly (see https://github.com/neelsmith/arsgrammatica), or `uv run
 # # --sandbox`/`marimo edit --sandbox` fails to resolve it.
 # arsgrammatica = { git = "https://github.com/neelsmith/arsgrammatica.git" }
+#
+# # This is reader.py plus the option of viewing a sentence's syntax graph
+# # as a Graphviz digraph. The `graphviz` dependency above is the thin
+# # PyPI wrapper only -- it still needs the separate Graphviz `dot`
+# # executable on your system PATH (e.g. `brew install graphviz` on
+# # macOS, `apt install graphviz` on Linux) to actually render; without
+# # it, this notebook still runs fine with Mermaid/displaCy, and reports
+# # why the Graphviz option can't render rather than failing outright.
 # ///
 
 import marimo
@@ -420,6 +429,30 @@ def _(depth, selected_tokengraph, tokengraph_to_mermaid):
     return (diagram,)
 
 
+@app.function
+# arsgrammatica's tokengraph_to_dot() (see arsgrammatica/dot.py) writes
+# each token's own id -- "1.t2", "1.t19_implied", etc. -- as a BARE,
+# unquoted DOT identifier, both as a node's own name and in every `->`
+# edge that references it. DOT's grammar has no identifier production
+# that starts with a digit and also contains letters; the closest thing,
+# a numeral, only allows digits and a single "." -- so Graphviz's own
+# lexer reads an id like "1.t2" as the numeral "1." immediately followed
+# by a SEPARATE identifier "t2" ("syntax ambiguity - badly delimited
+# number ... splits into two tokens"). This is worse than a cosmetic
+# warning: every "N.tM" id with the same leading "N." collapses onto ONE
+# shared node literally named "N." in the rendered graph, silently
+# merging unrelated tokens' edges together. Quoting every such id turns
+# it into a single, unambiguous DOT QUOTED_ID token instead, which fixes
+# the actual graph structure, not just the warning. (Filed as an
+# arsgrammatica bug candidate; this is a local workaround pending a fix
+# there, so it stays for both notebooks in this repo, but only this one
+# actually invokes `dot` -- reader.py doesn't offer Graphviz at all.)
+def quote_dot_token_ids(dot_source):
+    import re
+
+    return re.sub(r"\b(\d+\.t\d+(?:_implied)?)\b", r'"\1"', dot_source)
+
+
 @app.cell
 def _(depth, selected_tokengraph, tokengraph_to_dot):
     # Cheap to always compute regardless of which tool is currently
@@ -427,6 +460,7 @@ def _(depth, selected_tokengraph, tokengraph_to_dot):
     # actually rendering it, which needs the graphviz package and the
     # `dot` executable (handled in diagram_display above).
     dot_source, dot_warnings = tokengraph_to_dot(selected_tokengraph, aat_depth=depth)
+    dot_source = quote_dot_token_ids(dot_source)
     return dot_source, dot_warnings
 
 
