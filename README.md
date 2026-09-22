@@ -1,4 +1,4 @@
-# proarchia
+# Cicero, *Pro Archia*
 
 Resources for reading Cicero, *Pro Archia*.
 
