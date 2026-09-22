@@ -28,24 +28,21 @@ def _():
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    # Review the Pro Archia syntax analyses
+    # Cicero, *Pro Archia*
     """)
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    > No LM access needed, and nothing to browse for -- every analysis file
-    > (the format `write_analyses()` produces) already saved in `data/` is
-    > loaded automatically, in citation order, as soon as this notebook
-    > opens. Pick one sentence below and inspect it.
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo, analysis_paths, read_error, read_warnings, sentence_dropdown, sentences, split_error):
+def _(
+    analysis_paths,
+    mo,
+    read_error,
+    read_warnings,
+    sentence_dropdown,
+    sentences,
+    split_error,
+):
     if read_error is not None:
         analysis_status = mo.callout(mo.md(f"Could not load any analyses: {read_error}"), kind="danger")
     elif split_error is not None:
@@ -55,7 +52,7 @@ def _(mo, analysis_paths, read_error, read_warnings, sentence_dropdown, sentence
         )
     else:
         analysis_status = mo.md(
-            f"## Sentence selection\n\n"
+            f"## Select a sentence\n\n"
             f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `data/`.*"
         )
 
@@ -116,7 +113,6 @@ def _(vuhtml):
 @app.cell(hide_code=True)
 def _(indentpsg, mo):
     mo.accordion({"***Fold/unfold passage indented by verbal unit***": indentpsg})
-
     return
 
 
@@ -246,7 +242,7 @@ def analysis_sort_key(path):
 
 
 @app.cell
-def _(DATA_DIR, analysis_sort_key):
+def _(DATA_DIR):
     analysis_paths = sorted(DATA_DIR.glob("*.cex"), key=analysis_sort_key) if DATA_DIR.is_dir() else []
     return (analysis_paths,)
 
@@ -283,7 +279,7 @@ def _(analysis_paths, read_analyses):
         read_error = "No analysis files (*.cex) found in data/."
     elif not sentences:
         read_error = "Found analysis files in data/, but none could be read -- see the warnings below."
-    return lm_infos, read_error, read_warnings, sentences, tokengraph, verbalunits
+    return read_error, read_warnings, sentences, tokengraph, verbalunits
 
 
 @app.cell
@@ -312,7 +308,13 @@ def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text):
     words = preview_text.split()
     preview = " ".join(words[:6])
     ellipsis = "…" if len(words) > 6 else ""
-    prefix = f"{citation}: " if citation else ""
+    # citation is a full CTS URN, e.g.
+    # "urn:cts:latinLit:phi0474.phi016.omar:1" -- show just its passage
+    # component (the part after the last colon, "1") rather than the
+    # whole URN. rsplit's maxsplit=1 leaves a citation with no colon at
+    # all unchanged, so this degrades gracefully for a non-URN citation.
+    passage = citation.rsplit(":", 1)[-1] if citation else None
+    prefix = f"{passage}: " if passage else ""
     return f"{index + 1}. {prefix}{preview}{ellipsis}"
 
 
@@ -355,12 +357,7 @@ def _(sentence_dropdown, sentence_slices, sentences):
         selected_tokengraph, selected_verbalunits = sentence_slices[sentence_dropdown.value]
         selected_sentence = sentences[sentence_dropdown.value]
         selected_citation = selected_sentence.tokens[0].citation if selected_sentence.tokens else None
-    return (
-        selected_citation,
-        selected_sentence,
-        selected_tokengraph,
-        selected_verbalunits,
-    )
+    return selected_citation, selected_tokengraph
 
 
 @app.cell(hide_code=True)

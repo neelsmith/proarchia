@@ -108,3 +108,54 @@ slider as before.
 Verified with `marimo export html` again after both changes: the rendered
 page shows the sentence dropdown with all 17 entries, and no trace of the
 AAT section or any error/traceback.
+
+## 2026-09-21 -- shorten sentence-menu labels to the passage number only
+
+Neel asked for the sentence-selection menu to show just the CTS URN's
+passage component (the part after the last colon, e.g. `1`) instead of the
+whole URN (`urn:cts:latinLit:phi0474.phi016.omar:1`), still followed by
+the first few words of the sentence.
+
+Changed `sentence_label()` (in `marimo/review_analyses.py`) to derive
+`passage = citation.rsplit(":", 1)[-1]` before building the menu-entry
+prefix, rather than using the raw `citation` string directly. Falls back
+to the citation unchanged if it has no colon at all. Verified with
+`marimo export html` against the real `data/` files: menu entries now read
+like `1. 1: si quid est in me ingeni,…` and `4. 2: ac ne quis a nobis
+hoc…` rather than repeating the full URN each time.
+
+## 2026-09-21 -- previous fix hadn't actually landed; reapplied on top of hand edits
+
+Neel reported the dropdown was still showing the full URN, and flagged
+that he'd hand-edited the notebook in the meantime (title changed to
+"Cicero, *Pro Archia*", the "## Sentence selection" heading reworded to
+"## Select a sentence", the old instructions blockquote removed, the
+`analysis_paths` cell's redundant `analysis_sort_key` parameter dropped,
+and the `selected_sentence`/`selected_verbalunits` cell's return trimmed
+down to just `selected_citation, selected_tokengraph` now that nothing
+downstream needs the other two -- a cleanup that was overdue after the
+AAT-graph removal above, since I'd left those two lying around unused).
+
+What actually happened: this repo has a `marimo/__marimo__/session/`
+folder, meaning marimo edit has an active session on this notebook. My
+previous push (the passage-number fix) landed on disk only briefly before
+that live session's own autosave overwrote it with content from an
+*earlier* version it still had open in the browser -- one that predates
+that fix but postdates the AAT removal, and that Neel had since hand-edited
+in the UI. Net effect: Neel's hand edits survived, but my `sentence_label`
+change silently didn't.
+
+This time, rather than overwriting the whole file from a local copy,
+edited `sentence_label()` in place on Neel's own machine with a targeted
+Python read-modify-write against the file as it currently stood (verified
+by diffing against Neel's actual hand-edited content first), so none of
+the hand edits above were touched. Re-verified with `marimo export html`
+against the real `data/` files afterward: menu entries read `1. 1: si
+quid est in me ingeni,…` etc., and every hand-edited piece (title, "Select
+a sentence" heading, trimmed return tuple) is still intact.
+
+Flagged to Neel: as long as a `marimo edit` session on this notebook stays
+open, its autosave will keep clobbering any change made to the file from
+outside that session with whatever it still has loaded in the browser --
+reloading the page in the browser after an outside edit (or saving/closing
+before one) avoids this.
