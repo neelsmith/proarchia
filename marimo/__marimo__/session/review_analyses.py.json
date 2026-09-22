@@ -1,0 +1,509 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.24.2",
+    "script_metadata_hash": "93aa2ab7f09c6ec9483a93c3244f5b30"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "1d0db38904205bec4d6f6f6a1f6cec3e",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "2e17f485d926990e0eaafd2eeeffa9ef",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"review-the-pro-archia-syntax-analyses\">Review the Pro Archia syntax analyses</h1></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "6c4b32dd116e41d3f5d45e8f5d4c21da",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><blockquote>\n<span class=\"paragraph\">No LM access needed, and nothing to browse for -- every analysis file\n(the format <code>write_analyses()</code> produces) already saved in <code>data/</code> is\nloaded automatically, in citation order, as soon as this notebook\nopens. Pick one sentence below and inspect it.</span>\n</blockquote></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "bkHC",
+      "code_hash": "289685c25f6e2bb2bdf26e11cdcd1d21",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<div style='display: flex;flex: 1;flex-direction: column;justify-content: flex-start;align-items: normal;flex-wrap: nowrap;gap: 0.5rem'><span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"sentence-selection\">Sentence selection</h2>\n<span class=\"paragraph\"><em>17 sentence(s) loaded from 17 file(s) in <code>data/</code>.</em></span></span><marimo-ui-element object-id='Pvdt-0' random-id='419bde30-dd23-a066-4f34-33b676561077'><marimo-dropdown data-initial-value='[]' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003e&#92;u003cem&#92;u003eSentence&#92;u003c/em&#92;u003e:&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;1. urn:cts:latinLit:phi0474.phi016.omar:1: si quid est in me ingeni,\u2026&quot;,&quot;2. urn:cts:latinLit:phi0474.phi016.omar:1: nam quoad longissime potest mens mea\u2026&quot;,&quot;3. urn:cts:latinLit:phi0474.phi016.omar:1: quod si haec vox huius hortatu\u2026&quot;,&quot;4. urn:cts:latinLit:phi0474.phi016.omar:2: ac ne quis a nobis hoc\u2026&quot;,&quot;5. urn:cts:latinLit:phi0474.phi016.omar:2: etenim omnes artes quae ad humanitatem\u2026&quot;,&quot;6. urn:cts:latinLit:phi0474.phi016.omar:3: sed ne cui vestrum mirum esse\u2026&quot;,&quot;7. urn:cts:latinLit:phi0474.phi016.omar:4: quod si mihi a vobis tribui\u2026&quot;,&quot;8. urn:cts:latinLit:phi0474.phi016.omar:4: nam ut primum ex pueris excessit\u2026&quot;,&quot;9. urn:cts:latinLit:phi0474.phi016.omar:4: post in ceteris Asiae partibus cunctaque\u2026&quot;,&quot;10. urn:cts:latinLit:phi0474.phi016.omar:5: erat Italia tum plena Graecarum artium\u2026&quot;,&quot;11. urn:cts:latinLit:phi0474.phi016.omar:5: itaque hunc et Tarentini et Locrenses\u2026&quot;,&quot;12. urn:cts:latinLit:phi0474.phi016.omar:5: hac tanta celebritate famae cum esset\u2026&quot;,&quot;13. urn:cts:latinLit:phi0474.phi016.omar:5: statim Luculli, cum praetextatus etiam tum\u2026&quot;,&quot;14. urn:cts:latinLit:phi0474.phi016.omar:5: dedit etiam hoc non solum lumen\u2026&quot;,&quot;15. urn:cts:latinLit:phi0474.phi016.omar:6: erat temporibus illis iucundus Q. Metello\u2026&quot;,&quot;16. urn:cts:latinLit:phi0474.phi016.omar:6: interim satis longo intervallo, cum esset\u2026&quot;,&quot;17. urn:cts:latinLit:phi0474.phi016.omar:6: quae cum esset civitas aequissimo iure\u2026&quot;]' data-allow-select-none='true' data-searchable='false' data-full-width='false' data-disabled='false'></marimo-dropdown></marimo-ui-element></div>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "lEQa",
+      "code_hash": "2aea766277d184b00480906b322d6138",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"selected-text\">Selected text</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "PKri",
+      "code_hash": "b9303d59ef9bc7a5f63e513a516d971a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<b><i>Passage text</i></b>: si quid est in me ingeni, iudices, quod sentio quam sit exiguum, aut si qua exercitatio dicendi, in qua me non infitior mediocriter esse versatum, aut si huiusce rei ratio aliqua ab optimarum artium studiis ac disciplina profecta, a qua ego nullum confiteor aetatis meae tempus abhorruisse, earum rerum omnium vel in primis hic A. Licinius fructum a me repetere prope suo iure debet."
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Xref",
+      "code_hash": "b5767f9cd9c9bf9f55bddc4a940dbe02",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"highlighted-by-verbal-units\">Highlighted by verbal units</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "SFPL",
+      "code_hash": "8a238b88f2564ad814263bfe5d654b13",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='nHfw-0' random-id='8a457bf0-a6d2-e3d5-cd07-b28555eae6ba'><marimo-slider data-initial-value='3' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003e&#92;u003cem&#92;u003eMaximum depth of subordination to display&#92;u003c/em&#92;u003e:&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-start='0' data-stop='3' data-steps='[]' data-debounce='false' data-disabled='false' data-orientation='&quot;horizontal&quot;' data-show-value='true' data-include-input='false' data-full-width='false'></marimo-slider></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "BYtC",
+      "code_hash": "5e983cbcb6b569d7d392f1281704b3c6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<b><i>Highlighted by verbal unit</i></b>: <span style=\"background-color: #82bbff; color: #000000;\">si</span> <span style=\"background-color: #82bbff; color: #000000;\">quid</span> <span style=\"background-color: #82bbff; color: #000000;\">est</span> <span style=\"background-color: #82bbff; color: #000000;\">in</span> <span style=\"background-color: #82bbff; color: #000000;\">me</span> <span style=\"background-color: #82bbff; color: #000000;\">ingeni</span>, <span style=\"background-color: #ffa682; color: #000000;\">iudices</span>, <span style=\"background-color: #70ffcc; color: #000000;\">quod</span> <span style=\"background-color: #70ffcc; color: #000000;\">sentio</span> <span style=\"background-color: #ffd170; color: #000000;\">quam</span> <span style=\"background-color: #ffd170; color: #000000;\">sit</span> <span style=\"background-color: #ffd170; color: #000000;\">exiguum</span>, <span style=\"background-color: #82bbff; color: #000000;\">aut</span> <span style=\"background-color: #ff94bc; color: #000000;\">si</span> <span style=\"background-color: #ff94bc; color: #000000;\">qua</span> <span style=\"background-color: #ff94bc; color: #000000;\">exercitatio</span> <span style=\"background-color: #ff94bc; color: #000000;\">dicendi</span>, <span style=\"background-color: #7aff7a; color: #000000;\">in</span> <span style=\"background-color: #a494ff; color: #000000;\">qua</span> <span style=\"background-color: #7aff7a; color: #000000;\">me</span> <span style=\"background-color: #a494ff; color: #000000;\">non</span> <span style=\"background-color: #a494ff; color: #000000;\">infitior</span> <span style=\"background-color: #7aff7a; color: #000000;\">mediocriter</span> <span style=\"background-color: #7aff7a; color: #000000;\">esse</span> <span style=\"background-color: #7aff7a; color: #000000;\">versatum</span>, <span style=\"background-color: #ff94bc; color: #000000;\">aut</span> <span style=\"background-color: #ff9594; color: #000000;\">si</span> <span style=\"background-color: #ff9594; color: #000000;\">huiusce</span> <span style=\"background-color: #ff9594; color: #000000;\">rei</span> <span style=\"background-color: #ff9594; color: #000000;\">ratio</span> <span style=\"background-color: #ff9594; color: #000000;\">aliqua</span> <span style=\"background-color: #ff9594; color: #000000;\">ab</span> <span style=\"background-color: #ff9594; color: #000000;\">optimarum</span> <span style=\"background-color: #ff9594; color: #000000;\">artium</span> <span style=\"background-color: #ff9594; color: #000000;\">studiis</span> <span style=\"background-color: #ff9594; color: #000000;\">ac</span> <span style=\"background-color: #ff9594; color: #000000;\">disciplina</span> <span style=\"background-color: #ff9594; color: #000000;\">profecta</span>, <span style=\"background-color: #82bbff; color: #000000;\">a</span> <span style=\"background-color: #ffa682; color: #000000;\">qua</span> <span style=\"background-color: #ffa682; color: #000000;\">ego</span> <span style=\"background-color: #82bbff; color: #000000;\">nullum</span> <span style=\"background-color: #ffa682; color: #000000;\">confiteor</span> <span style=\"background-color: #82bbff; color: #000000;\">aetatis</span> <span style=\"background-color: #82bbff; color: #000000;\">meae</span> <span style=\"background-color: #82bbff; color: #000000;\">tempus</span> <span style=\"background-color: #82bbff; color: #000000;\">abhorruisse</span>, <span style=\"background-color: #ffa682; color: #000000;\">earum</span> <span style=\"background-color: #ffa682; color: #000000;\">rerum</span> <span style=\"background-color: #ffa682; color: #000000;\">omnium</span> <span style=\"background-color: #ffa682; color: #000000;\">vel</span> <span style=\"background-color: #ffa682; color: #000000;\">in</span> <span style=\"background-color: #ffa682; color: #000000;\">primis</span> <span style=\"background-color: #ffa682; color: #000000;\">hic</span> <span style=\"background-color: #ffa682; color: #000000;\">A.</span> <span style=\"background-color: #ffa682; color: #000000;\">Licinius</span> <span style=\"background-color: #ffa682; color: #000000;\">fructum</span> <span style=\"background-color: #ffa682; color: #000000;\">a</span> <span style=\"background-color: #ffa682; color: #000000;\">me</span> <span style=\"background-color: #ffa682; color: #000000;\">repetere</span> <span style=\"background-color: #ffa682; color: #000000;\">prope</span> <span style=\"background-color: #ffa682; color: #000000;\">suo</span> <span style=\"background-color: #ffa682; color: #000000;\">iure</span> <span style=\"background-color: #ffa682; color: #000000;\">debet</span>."
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "RGSE",
+      "code_hash": "19578fc284dbd1116af6649a10bf61b0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-accordion data-labels='[&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003e&#92;u003cstrong&#92;u003e&#92;u003cem&#92;u003eFold/unfold passage indented by verbal unit&#92;u003c/em&#92;u003e&#92;u003c/strong&#92;u003e&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;]' data-multiple='false'><div><div style=\"margin-left: 2.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #82bbff; color: #000000;\">si</span> <span style=\"background-color: #82bbff; color: #000000;\">quid</span> <span style=\"background-color: #82bbff; color: #000000;\">est</span> <span style=\"background-color: #82bbff; color: #000000;\">in</span> <span style=\"background-color: #82bbff; color: #000000;\">me</span> <span style=\"background-color: #82bbff; color: #000000;\">ingeni</span>,</div>\n<div style=\"margin-left: 0.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ffa682; color: #000000;\">iudices</span>,</div>\n<div style=\"margin-left: 4.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #70ffcc; color: #000000;\">quod</span> <span style=\"background-color: #70ffcc; color: #000000;\">sentio</span></div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ffd170; color: #000000;\">quam</span> <span style=\"background-color: #ffd170; color: #000000;\">sit</span> <span style=\"background-color: #ffd170; color: #000000;\">exiguum</span>,</div>\n<div style=\"margin-left: 2.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #82bbff; color: #000000;\">aut</span></div>\n<div style=\"margin-left: 2.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ff94bc; color: #000000;\">si</span> <span style=\"background-color: #ff94bc; color: #000000;\">qua</span> <span style=\"background-color: #ff94bc; color: #000000;\">exercitatio</span> <span style=\"background-color: #ff94bc; color: #000000;\">dicendi</span>,</div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #7aff7a; color: #000000;\">in</span></div>\n<div style=\"margin-left: 4.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #a494ff; color: #000000;\">qua</span></div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #7aff7a; color: #000000;\">me</span></div>\n<div style=\"margin-left: 4.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #a494ff; color: #000000;\">non</span> <span style=\"background-color: #a494ff; color: #000000;\">infitior</span></div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #7aff7a; color: #000000;\">mediocriter</span> <span style=\"background-color: #7aff7a; color: #000000;\">esse</span> <span style=\"background-color: #7aff7a; color: #000000;\">versatum</span>,</div>\n<div style=\"margin-left: 2.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ff94bc; color: #000000;\">aut</span></div>\n<div style=\"margin-left: 2.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ff9594; color: #000000;\">si</span> <span style=\"background-color: #ff9594; color: #000000;\">huiusce</span> <span style=\"background-color: #ff9594; color: #000000;\">rei</span> <span style=\"background-color: #ff9594; color: #000000;\">ratio</span> <span style=\"background-color: #ff9594; color: #000000;\">aliqua</span> <span style=\"background-color: #ff9594; color: #000000;\">ab</span> <span style=\"background-color: #ff9594; color: #000000;\">optimarum</span> <span style=\"background-color: #ff9594; color: #000000;\">artium</span> <span style=\"background-color: #ff9594; color: #000000;\">studiis</span> <span style=\"background-color: #ff9594; color: #000000;\">ac</span> <span style=\"background-color: #ff9594; color: #000000;\">disciplina</span> <span style=\"background-color: #ff9594; color: #000000;\">profecta</span>,</div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #82bbff; color: #000000;\">a</span></div>\n<div style=\"margin-left: 4.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ffa682; color: #000000;\">qua</span> <span style=\"background-color: #ffa682; color: #000000;\">ego</span></div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #82bbff; color: #000000;\">nullum</span></div>\n<div style=\"margin-left: 4.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ffa682; color: #000000;\">confiteor</span></div>\n<div style=\"margin-left: 6.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #82bbff; color: #000000;\">aetatis</span> <span style=\"background-color: #82bbff; color: #000000;\">meae</span> <span style=\"background-color: #82bbff; color: #000000;\">tempus</span> <span style=\"background-color: #82bbff; color: #000000;\">abhorruisse</span>,</div>\n<div style=\"margin-left: 0.0em; margin-bottom: 0.35em;\"><span style=\"background-color: #ffa682; color: #000000;\">earum</span> <span style=\"background-color: #ffa682; color: #000000;\">rerum</span> <span style=\"background-color: #ffa682; color: #000000;\">omnium</span> <span style=\"background-color: #ffa682; color: #000000;\">vel</span> <span style=\"background-color: #ffa682; color: #000000;\">in</span> <span style=\"background-color: #ffa682; color: #000000;\">primis</span> <span style=\"background-color: #ffa682; color: #000000;\">hic</span> <span style=\"background-color: #ffa682; color: #000000;\">A.</span> <span style=\"background-color: #ffa682; color: #000000;\">Licinius</span> <span style=\"background-color: #ffa682; color: #000000;\">fructum</span> <span style=\"background-color: #ffa682; color: #000000;\">a</span> <span style=\"background-color: #ffa682; color: #000000;\">me</span> <span style=\"background-color: #ffa682; color: #000000;\">repetere</span> <span style=\"background-color: #ffa682; color: #000000;\">prope</span> <span style=\"background-color: #ffa682; color: #000000;\">suo</span> <span style=\"background-color: #ffa682; color: #000000;\">iure</span> <span style=\"background-color: #ffa682; color: #000000;\">debet</span>.</div></div></marimo-accordion>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Kclp",
+      "code_hash": "a1c674ae51327b2515c1104e87832b6d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"diagram-syntactic-relations\">Diagram syntactic relations</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "emfo",
+      "code_hash": "549d3e940fbcff8707e4ba1cd62a3c69",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-ui-element object-id='AjVT-0' random-id='90687919-68cc-4355-13ec-c22b169cfee4'><marimo-radio data-initial-value='&quot;mermaid&quot;' data-label='&quot;&#92;u003cspan class=&#92;&quot;markdown prose dark:prose-invert contents&#92;&quot;&#92;u003e&#92;u003cspan class=&#92;&quot;paragraph&#92;&quot;&#92;u003e&#92;u003cem&#92;u003eDiagram tool&#92;u003c/em&#92;u003e:&#92;u003c/span&#92;u003e&#92;u003c/span&#92;u003e&quot;' data-options='[&quot;mermaid&quot;,&quot;displacy&quot;]' data-inline='true' data-disabled='false'></marimo-radio></marimo-ui-element>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Hstk",
+      "code_hash": "b9a028e381457a28df8b3f5fa5d3e648",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<marimo-mermaid data-diagram='&quot;graph BT&#92;n    1.t0[&#92;&quot;si&#92;&quot;]&#92;n    1.t1[&#92;&quot;quid&#92;&quot;]&#92;n    1.t2[&#92;&quot;est&#92;&quot;]&#92;n    1.t3[&#92;&quot;in&#92;&quot;]&#92;n    1.t4[&#92;&quot;me&#92;&quot;]&#92;n    1.t5[&#92;&quot;ingeni&#92;&quot;]&#92;n    1.t7[&#92;&quot;iudices&#92;&quot;]&#92;n    1.t9[&#92;&quot;quod&#92;&quot;]&#92;n    1.t10[&#92;&quot;sentio&#92;&quot;]&#92;n    1.t11[&#92;&quot;quam&#92;&quot;]&#92;n    1.t12[&#92;&quot;sit&#92;&quot;]&#92;n    1.t13[&#92;&quot;exiguum&#92;&quot;]&#92;n    1.t15[&#92;&quot;aut&#92;&quot;]&#92;n    1.t16[&#92;&quot;si&#92;&quot;]&#92;n    1.t17[&#92;&quot;qua&#92;&quot;]&#92;n    1.t18[&#92;&quot;exercitatio&#92;&quot;]&#92;n    1.t19[&#92;&quot;dicendi&#92;&quot;]&#92;n    1.t19_implied(&#92;&quot;elided sum&#92;&quot;)&#92;n    1.t21[&#92;&quot;in&#92;&quot;]&#92;n    1.t22[&#92;&quot;qua&#92;&quot;]&#92;n    1.t23[&#92;&quot;me&#92;&quot;]&#92;n    1.t24[&#92;&quot;non&#92;&quot;]&#92;n    1.t25[&#92;&quot;infitior&#92;&quot;]&#92;n    1.t26[&#92;&quot;mediocriter&#92;&quot;]&#92;n    1.t27[&#92;&quot;esse&#92;&quot;]&#92;n    1.t28[&#92;&quot;versatum&#92;&quot;]&#92;n    1.t30[&#92;&quot;aut&#92;&quot;]&#92;n    1.t31[&#92;&quot;si&#92;&quot;]&#92;n    1.t32[&#92;&quot;huiusce&#92;&quot;]&#92;n    1.t33[&#92;&quot;rei&#92;&quot;]&#92;n    1.t34[&#92;&quot;ratio&#92;&quot;]&#92;n    1.t35[&#92;&quot;aliqua&#92;&quot;]&#92;n    1.t36[&#92;&quot;ab&#92;&quot;]&#92;n    1.t37[&#92;&quot;optimarum&#92;&quot;]&#92;n    1.t38[&#92;&quot;artium&#92;&quot;]&#92;n    1.t39[&#92;&quot;studiis&#92;&quot;]&#92;n    1.t40[&#92;&quot;ac&#92;&quot;]&#92;n    1.t41[&#92;&quot;disciplina&#92;&quot;]&#92;n    1.t42[&#92;&quot;profecta&#92;&quot;]&#92;n    1.t42_implied(&#92;&quot;elided sum&#92;&quot;)&#92;n    1.t44[&#92;&quot;a&#92;&quot;]&#92;n    1.t45[&#92;&quot;qua&#92;&quot;]&#92;n    1.t46[&#92;&quot;ego&#92;&quot;]&#92;n    1.t47[&#92;&quot;nullum&#92;&quot;]&#92;n    1.t48[&#92;&quot;confiteor&#92;&quot;]&#92;n    1.t49[&#92;&quot;aetatis&#92;&quot;]&#92;n    1.t50[&#92;&quot;meae&#92;&quot;]&#92;n    1.t51[&#92;&quot;tempus&#92;&quot;]&#92;n    1.t52[&#92;&quot;abhorruisse&#92;&quot;]&#92;n    1.t54[&#92;&quot;earum&#92;&quot;]&#92;n    1.t55[&#92;&quot;rerum&#92;&quot;]&#92;n    1.t56[&#92;&quot;omnium&#92;&quot;]&#92;n    1.t57[&#92;&quot;vel&#92;&quot;]&#92;n    1.t58[&#92;&quot;in&#92;&quot;]&#92;n    1.t59[&#92;&quot;primis&#92;&quot;]&#92;n    1.t60[&#92;&quot;hic&#92;&quot;]&#92;n    1.t61[&#92;&quot;A.&#92;&quot;]&#92;n    1.t62[&#92;&quot;Licinius&#92;&quot;]&#92;n    1.t63[&#92;&quot;fructum&#92;&quot;]&#92;n    1.t64[&#92;&quot;a&#92;&quot;]&#92;n    1.t65[&#92;&quot;me&#92;&quot;]&#92;n    1.t66[&#92;&quot;repetere&#92;&quot;]&#92;n    1.t67[&#92;&quot;prope&#92;&quot;]&#92;n    1.t68[&#92;&quot;suo&#92;&quot;]&#92;n    1.t69[&#92;&quot;iure&#92;&quot;]&#92;n    1.t70[&#92;&quot;debet&#92;&quot;]&#92;n    root([&#92;&quot;root&#92;&quot;])&#92;n    1.t0 --&#92;u003e|subordinating conjunction| 1.t70&#92;n    1.t1 --&#92;u003e|subject| 1.t2&#92;n    1.t2 --&#92;u003e|unit verb| 1.t0&#92;n    1.t3 --&#92;u003e|adverbial| 1.t2&#92;n    1.t4 --&#92;u003e|object of preposition| 1.t3&#92;n    1.t5 --&#92;u003e|genitive| 1.t1&#92;n    1.t7 --&#92;u003e|vocative| 1.t70&#92;n    1.t9 --&#92;u003e|relative pronoun| 1.t1&#92;n    1.t9 --&#92;u003e|direct object| 1.t10&#92;n    1.t10 --&#92;u003e|unit verb| 1.t9&#92;n    1.t11 --&#92;u003e|subordinating conjunction| 1.t10&#92;n    1.t12 --&#92;u003e|unit verb| 1.t11&#92;n    1.t13 --&#92;u003e|predicate| 1.t12&#92;n    1.t15 --&#92;u003e|coordinating conjunction| 1.t2&#92;n    1.t15 --&#92;u003e|coordinating conjunction| 1.t19_implied&#92;n    1.t16 --&#92;u003e|subordinating conjunction| 1.t70&#92;n    1.t17 --&#92;u003e|adjectival| 1.t18&#92;n    1.t18 --&#92;u003e|subject| 1.t19_implied&#92;n    1.t19 --&#92;u003e|genitive| 1.t18&#92;n    1.t19_implied --&#92;u003e|unit verb| 1.t16&#92;n    1.t21 --&#92;u003e|adverbial| 1.t28&#92;n    1.t22 --&#92;u003e|relative pronoun| 1.t18&#92;n    1.t22 --&#92;u003e|object of preposition| 1.t21&#92;n    1.t23 --&#92;u003e|subject| 1.t28&#92;n    1.t24 --&#92;u003e|adverbial| 1.t25&#92;n    1.t25 --&#92;u003e|unit verb| 1.t22&#92;n    1.t26 --&#92;u003e|adverbial| 1.t28&#92;n    1.t27 --&#92;u003e|auxiliary| 1.t28&#92;n    1.t28 --&#92;u003e|indirect statement| 1.t25&#92;n    1.t30 --&#92;u003e|coordinating conjunction| 1.t19_implied&#92;n    1.t30 --&#92;u003e|coordinating conjunction| 1.t42&#92;n    1.t31 --&#92;u003e|subordinating conjunction| 1.t70&#92;n    1.t32 --&#92;u003e|adjectival| 1.t33&#92;n    1.t33 --&#92;u003e|genitive| 1.t34&#92;n    1.t34 --&#92;u003e|subject| 1.t42&#92;n    1.t35 --&#92;u003e|adjectival| 1.t34&#92;n    1.t36 --&#92;u003e|adverbial| 1.t42&#92;n    1.t37 --&#92;u003e|adjectival| 1.t38&#92;n    1.t38 --&#92;u003e|genitive| 1.t39&#92;n    1.t39 --&#92;u003e|object of preposition| 1.t36&#92;n    1.t40 --&#92;u003e|coordinating conjunction| 1.t39&#92;n    1.t40 --&#92;u003e|coordinating conjunction| 1.t41&#92;n    1.t41 --&#92;u003e|object of preposition| 1.t36&#92;n    1.t42 --&#92;u003e|unit verb| 1.t31&#92;n    1.t42_implied --&#92;u003e|auxiliary| 1.t42&#92;n    1.t44 --&#92;u003e|adverbial| 1.t52&#92;n    1.t45 --&#92;u003e|relative pronoun| 1.t41&#92;n    1.t45 --&#92;u003e|object of preposition| 1.t44&#92;n    1.t46 --&#92;u003e|subject| 1.t48&#92;n    1.t47 --&#92;u003e|adjectival| 1.t51&#92;n    1.t48 --&#92;u003e|unit verb| 1.t45&#92;n    1.t49 --&#92;u003e|genitive| 1.t51&#92;n    1.t50 --&#92;u003e|adjectival| 1.t49&#92;n    1.t51 --&#92;u003e|subject| 1.t52&#92;n    1.t52 --&#92;u003e|indirect statement| 1.t48&#92;n    1.t54 --&#92;u003e|adjectival| 1.t55&#92;n    1.t55 --&#92;u003e|genitive| 1.t63&#92;n    1.t56 --&#92;u003e|adjectival| 1.t55&#92;n    1.t57 --&#92;u003e|adverbial| 1.t58&#92;n    1.t58 --&#92;u003e|adverbial| 1.t70&#92;n    1.t59 --&#92;u003e|object of preposition| 1.t58&#92;n    1.t60 --&#92;u003e|adjectival| 1.t62&#92;n    1.t61 --&#92;u003e|praenomen| 1.t62&#92;n    1.t62 --&#92;u003e|subject| 1.t70&#92;n    1.t63 --&#92;u003e|direct object| 1.t66&#92;n    1.t64 --&#92;u003e|adverbial| 1.t66&#92;n    1.t65 --&#92;u003e|object of preposition| 1.t64&#92;n    1.t66 --&#92;u003e|complementary infinitive| 1.t70&#92;n    1.t67 --&#92;u003e|adverbial| 1.t69&#92;n    1.t68 --&#92;u003e|adjectival| 1.t69&#92;n    1.t69 --&#92;u003e|ablative| 1.t66&#92;n    1.t70 --&#92;u003e|unit verb| root&#92;n&#92;n    1.t2 ~~~ 1.t19_implied ~~~ 1.t42&#92;n    1.t10 ~~~ 1.t25 ~~~ 1.t48&#92;n    1.t12 ~~~ 1.t28 ~~~ 1.t52&#92;n&#92;n    classDef vu0 fill:#82bbff,stroke:#2a78d6,color:#000000;&#92;n    classDef vu1 fill:#ffa682,stroke:#eb6834,color:#000000;&#92;n    classDef vu2 fill:#70ffcc,stroke:#1baf7a,color:#000000;&#92;n    classDef vu3 fill:#ffd170,stroke:#eda100,color:#000000;&#92;n    classDef vu4 fill:#ff94bc,stroke:#e87ba4,color:#000000;&#92;n    classDef vu5 fill:#7aff7a,stroke:#008300,color:#000000;&#92;n    classDef vu6 fill:#a494ff,stroke:#4a3aa7,color:#000000;&#92;n    classDef vu7 fill:#ff9594,stroke:#e34948,color:#000000;&#92;n    classDef vu8 fill:#82bbff,stroke:#2a78d6,color:#000000;&#92;n    classDef vu9 fill:#ffa682,stroke:#eb6834,color:#000000;&#92;n    class 1.t0,1.t1,1.t2,1.t3,1.t4,1.t5,1.t15 vu0;&#92;n    class 1.t7,1.t54,1.t55,1.t56,1.t57,1.t58,1.t59,1.t60,1.t61,1.t62,1.t63,1.t64,1.t65,1.t66,1.t67,1.t68,1.t69,1.t70 vu1;&#92;n    class 1.t9,1.t10 vu2;&#92;n    class 1.t11,1.t12,1.t13 vu3;&#92;n    class 1.t16,1.t17,1.t18,1.t19,1.t30 vu4;&#92;n    class 1.t21,1.t23,1.t26,1.t27,1.t28 vu5;&#92;n    class 1.t22,1.t24,1.t25 vu6;&#92;n    class 1.t31,1.t32,1.t33,1.t34,1.t35,1.t36,1.t37,1.t38,1.t39,1.t40,1.t41,1.t42 vu7;&#92;n    class 1.t44,1.t47,1.t49,1.t50,1.t51,1.t52 vu8;&#92;n    class 1.t45,1.t46,1.t48 vu9;&#92;n    classDef implied fill:#ffc107,stroke:#7a5200,color:#000000;&#92;n    class 1.t19_implied,1.t42_implied implied;&quot;'></marimo-mermaid>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nWHF",
+      "code_hash": "ca4d19aee9e773382186687d1366b03b",
+      "outputs": [],
+      "console": []
+    },
+    {
+      "id": "iLit",
+      "code_hash": "03dfee3d28b99b37f0412d0e11e02f02",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/html": "<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZHCJ",
+      "code_hash": "b8e9d84272af56437459bb81d928428b",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h1 id=\"implementation\">Implementation</h1></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ROlb",
+      "code_hash": "afcfe0fd3b495664025db962c0d36dde",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"loading-the-saved-analyses\">Loading the saved analyses</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "qnkX",
+      "code_hash": "a8780e6b524ea95fea34fcd3cb74a1bb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TqIu",
+      "code_hash": "cfaf092e3215825c366c133426158480",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Vxnm",
+      "code_hash": "81aa46aaaf84d07478602e03070c8289",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "DnEU",
+      "code_hash": "c6b81e9891a432fda5db2e05a51b4312",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ulZA",
+      "code_hash": "cce059e27cb24a5cf703ef4846e12d3f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ecfG",
+      "code_hash": "d843bd94c1853f34fe36f0f1d19ec456",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "Pvdt",
+      "code_hash": "89689d2c6e5312f7e472cbe7737401ce",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "ZBYS",
+      "code_hash": "7510ab32cdb14c8e83831ffd18e0b4b4",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aLJB",
+      "code_hash": "9feb5e0db257fe104d744bc81bc958a1",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"format-output-display\">Format output display</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "nHfw",
+      "code_hash": "5a48e11ababa91df7aa39010040b57f6",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "xXTn",
+      "code_hash": "3f02ac9d479a5cef72ec4c34e15b2485",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "AjVT",
+      "code_hash": "06d135b403698531f8f5f18b22032ac0",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "pHFh",
+      "code_hash": "f7bad6a99a1450ba3e7345f70913aa30",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "NCOB",
+      "code_hash": "e986f0351a42557f9aec30568e6e648f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "aqbW",
+      "code_hash": "16c380f2bf925688b7b4ff5a7b40b75c",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TRpd",
+      "code_hash": "535397c5036851377b0224e07dafa2f9",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "TXez",
+      "code_hash": "b7aab5507dbd3ef614770c7394ddde07",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "dNNg",
+      "code_hash": "b60c1c87e849aaf5d4953486eb36c85a",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "yCnT",
+      "code_hash": "3f3a813fef48697056998a2eb6529a9f",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wlCL",
+      "code_hash": "972aea0828b841bb789115b5e7248e21",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "kqZH",
+      "code_hash": "d63fb1da8c34dbfeca0ac88e731b9938",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/markdown": "<span class=\"markdown prose dark:prose-invert contents\"><h2 id=\"imports\">Imports</h2></span>"
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "wAgl",
+      "code_hash": "592f6d0c07d1654268718ea2c8b29f36",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    }
+  ]
+}

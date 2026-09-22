@@ -52,3 +52,59 @@ file pinning `arsgrammatica`/`marimo` for this repo specifically (the new
 notebook currently only declares them via a PEP 723 `# /// script` header,
 which `marimo edit --sandbox` and `uv run` pick up automatically but a
 plain `pip install` workflow would not).
+
+## 2026-09-21 -- fix sandbox dependency resolution
+
+Neel hit this on `marimo edit --sandbox marimo/review_analyses.py`:
+
+    No solution found when resolving `--with` dependencies:
+    Because arsgrammatica was not found in the package registry ...
+
+Cause: arsgrammatica isn't published on PyPI, so the notebook's PEP 723
+`dependencies = ["marimo", "arsgrammatica"]` block alone gives `uv` nothing
+to resolve `arsgrammatica` against.
+
+Fix: added a `[tool.uv.sources]` table to the same header pointing
+`arsgrammatica` at its GitHub repo directly:
+
+    [tool.uv.sources]
+    arsgrammatica = { git = "https://github.com/neelsmith/arsgrammatica.git" }
+
+Verified with `uv export --script marimo/review_analyses.py` (resolves
+cleanly, pulls arsgrammatica from the git repo) and a full
+`uv run --isolated --with-requirements <exported reqs> ...` install into a
+throwaway venv (installs all 83 packages, `import arsgrammatica` and
+`import marimo` both succeed) before writing the fix back.
+
+## 2026-09-21 -- sentence menu wasn't showing; removed the AAT graph section
+
+Neel reported the sentence-selection menu wasn't appearing, and asked to
+drop the "Reduction to AAT graph" section entirely.
+
+Root cause of the missing menu: marimo only displays a cell's bare,
+unassigned top-level expression as that cell's last statement. The status
+cell built its `mo.vstack([...])` call *inside* an `if/else` (to show a
+warning line only when some files failed to read), so neither branch's
+vstack was ever the cell's own top-level last expression -- nothing
+rendered, menu included. Fixed by assigning the result to `status_display`
+in both branches and referencing that name as its own bare statement
+before `return`, matching the same pattern already used elsewhere in this
+notebook (e.g. `diagram_display`). Confirmed the fix with
+`marimo export html`: the rendered output now embeds a
+`<marimo-dropdown ...>` element listing all 17 sentences, which it did not
+before.
+
+Removed entirely: the "## Reduction to AAT graph" heading, its display
+cell, the `aat_tokengraph`/`aat_diagram`/`aat_display` build cells, and the
+now-unused `aatgraph`, `filter_tokengraph_by_aat_depth`, `SimpleNamespace`,
+`aat_available`, `graph_to_mermaid` imports (including the `aat.core` probe
+import). Left everything else alone -- in particular the `aat_depth`
+*parameter name* on `tokengraph_to_mermaid`/`tokengraph_to_dot`/
+`tokengraph_to_displacy_svg` is unrelated to this feature (it's just what
+those functions call the subordination-depth cutoff) and still works the
+same way, fed by the same "Maximum depth of subordination to display"
+slider as before.
+
+Verified with `marimo export html` again after both changes: the rendered
+page shows the sentence dropdown with all 17 entries, and no trace of the
+AAT section or any error/traceback.

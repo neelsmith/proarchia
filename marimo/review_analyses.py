@@ -4,6 +4,12 @@
 #     "marimo",
 #     "arsgrammatica",
 # ]
+#
+# [tool.uv.sources]
+# # arsgrammatica isn't published on PyPI -- point uv at the GitHub repo
+# # directly (see https://github.com/neelsmith/arsgrammatica), or `uv run
+# # --sandbox`/`marimo edit --sandbox` fails to resolve it.
+# arsgrammatica = { git = "https://github.com/neelsmith/arsgrammatica.git" }
 # ///
 
 import marimo
@@ -58,9 +64,18 @@ def _(mo, analysis_paths, read_error, read_warnings, sentence_dropdown, sentence
             mo.md("Some files could not be read and were skipped:\n\n" + "\n".join(f"- {w}" for w in read_warnings)),
             kind="warn",
         )
-        mo.vstack([analysis_status, warnings_callout, sentence_dropdown])
+        status_display = mo.vstack([analysis_status, warnings_callout, sentence_dropdown])
     else:
-        mo.vstack([analysis_status, sentence_dropdown])
+        status_display = mo.vstack([analysis_status, sentence_dropdown])
+
+    # A cell only ever displays a bare top-level expression as its last
+    # statement -- the vstack() calls above are built inside an if/else, so
+    # (unlike arsgrammatica's own marimo/latin_syntaxer_review.py, which
+    # only ever has ONE unconditional vstack() as its literal last
+    # statement) they have to be assigned to a name first and referenced
+    # again here, or nothing renders at all: no status line, and no
+    # sentence-selection menu.
+    status_display
     return
 
 
@@ -181,20 +196,6 @@ def _(
 @app.cell(hide_code=True)
 def _(diagram_download):
     diagram_download
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## Reduction to AAT graph
-    """)
-    return
-
-
-@app.cell(hide_code=True)
-def _(aat_display):
-    aat_display
     return
 
 
@@ -526,63 +527,6 @@ def _(depth, mo, selected_tokengraph, tokengraph_to_depth_html):
     return (indentpsg,)
 
 
-@app.cell
-def _(depth, filter_tokengraph_by_aat_depth, selected_tokengraph):
-    # Filter the selected sentence's own tokengraph to the SAME depth
-    # cutoff the Mermaid/Graphviz diagrams and HTML displays above use,
-    # BEFORE building the AAT graph from it below.
-    aat_tokengraph = filter_tokengraph_by_aat_depth(selected_tokengraph, depth)
-    return (aat_tokengraph,)
-
-
-@app.cell
-def _(
-    SimpleNamespace,
-    aat_available,
-    aat_tokengraph,
-    aatgraph,
-    graph_to_mermaid,
-    selected_sentence,
-    selected_verbalunits,
-):
-    # Build the AAT (Agent-Action-Target) graph for just the currently
-    # selected sentence, limited to the depth cutoff above -- aatgraph()
-    # takes (sentences, results) in analyze_sources()'s own shape, so a
-    # one-element list of each is enough here.
-    aat_diagram = None
-    aat_warnings = []
-    if aat_available and aat_tokengraph and selected_sentence is not None:
-        result = SimpleNamespace(tokengraph=aat_tokengraph, verbalunits=selected_verbalunits)
-        graph, aatgraph_warnings = aatgraph([selected_sentence], [result])
-        aat_diagram, aat_mermaid_warnings = graph_to_mermaid(graph)
-        aat_warnings = aatgraph_warnings + aat_mermaid_warnings
-    return aat_diagram, aat_warnings
-
-
-@app.cell
-def _(aat_available, aat_diagram, aat_warnings, mo):
-    if not aat_available:
-        aat_display = mo.callout(
-            mo.md(
-                "The `aat` package isn't installed, so the AAT "
-                "(Agent-Action-Target) graph can't be built here."
-            ),
-            kind="warn",
-        )
-    elif aat_diagram is None:
-        aat_display = mo.md("*Choose a sentence above to see its AAT (Agent-Action-Target) graph.*")
-    else:
-        aat_display = mo.vstack(
-            [mo.md("**AAT (Agent-Action-Target) graph**"), mo.mermaid(aat_diagram)]
-            + (
-                [mo.callout(mo.md("\n".join(f"- {w}" for w in aat_warnings)), kind="warn")]
-                if aat_warnings
-                else []
-            )
-        )
-    return (aat_display,)
-
-
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
@@ -594,11 +538,8 @@ def _(mo):
 @app.cell
 def _():
     from pathlib import Path
-    from types import SimpleNamespace
 
     from arsgrammatica import (
-        aatgraph,
-        filter_tokengraph_by_aat_depth,
         max_subordination_depth,
         read_analyses,
         split_analysis_by_sentence,
@@ -609,21 +550,6 @@ def _():
         tokengraph_to_mermaid,
         tokengraph_to_text,
     )
-
-    # aatgraph() (above) is always importable from arsgrammatica -- it only
-    # raises when actually CALLED without the separate `aat` package
-    # installed. graph_to_mermaid() -- aat's own Mermaid renderer for the
-    # AATGraph aatgraph() builds -- has no such fallback, so its import is
-    # what actually detects whether `aat` is installed at all; the AAT
-    # display cells below check aat_available rather than calling either
-    # function and catching ImportError themselves.
-    try:
-        from aat.core import graph_to_mermaid
-
-        aat_available = True
-    except ImportError:
-        graph_to_mermaid = None
-        aat_available = False
 
     # graphviz (the PyPI package -- a thin subprocess wrapper around the
     # separately-installed Graphviz `dot` executable) is optional: checked
@@ -640,11 +566,6 @@ def _():
         graphviz_available = False
     return (
         Path,
-        SimpleNamespace,
-        aat_available,
-        aatgraph,
-        filter_tokengraph_by_aat_depth,
-        graph_to_mermaid,
         graphviz,
         graphviz_available,
         max_subordination_depth,
