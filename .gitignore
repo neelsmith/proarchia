@@ -1,4 +1,4 @@
 quarto/quarto-build/
 .DS_Store
-__pycache__/
+marimo/__pycache__/
 marimo/__marimo__/
