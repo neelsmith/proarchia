@@ -479,3 +479,16 @@ Pyodide is documented to transparently proxy through the browser's
 `fetch()` for same-origin requests, but that proxying itself is the one
 piece that can only be confirmed by actually opening the exported page
 in a browser.
+
+## 2026-09-23 (cont.): Moved generate_public_manifest.py to utilities/
+
+Moved `marimo/generate_public_manifest.py` to `utilities/generate_public_manifest.py`
+at the user's request -- it's a standalone maintenance script, not part
+of either notebook, so it belongs with this project's other utility
+scripts rather than inside `marimo/`. Updated its `PUBLIC_DIR` constant
+(`Path(__file__).parent / "public"` -> `Path(__file__).parent.parent / "marimo" / "public"`,
+since `utilities/` and `marimo/` are now siblings) and its own
+docstring/usage line to match the new path. Re-ran it from the new
+location to confirm it still finds `marimo/public/` correctly -- wrote
+the same 17 filenames as before. Also fixed the one other reference to
+the old path, in `notes/wasmexport.md`.
