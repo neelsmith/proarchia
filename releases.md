@@ -2,7 +2,5 @@
 title: Version history
 ---
 
-In planning stages only: no published versions.
 
-
-**0.1.0**, *?*: initial Marimo notebook.
+**Sept. 22, 2026**: preliminary experimental notebook published at https://shot.holycross.edu/readers/proarchia.
