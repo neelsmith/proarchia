@@ -34,8 +34,11 @@ def _(
     read_error,
     read_warnings,
     sentence_dropdown,
+    sentence_status_warning,
     sentences,
     split_error,
+    vetted_count,
+    vetted_only,
 ):
     if read_error is not None:
         analysis_status = mo.callout(mo.md(f"Could not load any analyses: {read_error}"), kind="danger")
@@ -47,7 +50,8 @@ def _(
     else:
         analysis_status = mo.md(
             f"## Select a sentence\n\n"
-            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/analyses/`.*"
+            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/analyses/`; "
+            f"{vetted_count} manually vetted (✅).*"
         )
 
     if read_warnings:
@@ -55,9 +59,12 @@ def _(
             mo.md("Some files could not be read and were skipped:\n\n" + "\n".join(f"- {w}" for w in read_warnings)),
             kind="warn",
         )
-        status_display = mo.vstack([analysis_status, warnings_callout, sentence_dropdown])
+        status_parts = [analysis_status, warnings_callout]
     else:
-        status_display = mo.vstack([analysis_status, sentence_dropdown])
+        status_parts = [analysis_status]
+    if sentence_status_warning:
+        status_parts.append(mo.callout(mo.md(sentence_status_warning), kind="warn"))
+    status_display = mo.vstack(status_parts + [vetted_only, sentence_dropdown])
 
     # A cell only ever displays a bare top-level expression as its last
     # statement -- the vstack() calls above are built inside an if/else, so
@@ -201,7 +208,9 @@ def _(mo):
     # its subdirectories) next to the exported notebook, so the
     # analyses have to live somewhere under it.
     ANALYSES_DIR = mo.notebook_location() / "public" / "analyses"
-    return (ANALYSES_DIR,)
+    # Which sentences have been manually vetted -- see load_sentence_status().
+    SENTENCE_STATUS_PATH = mo.notebook_location() / "public" / "sentencestatus.cex"
+    return ANALYSES_DIR, SENTENCE_STATUS_PATH
 
 
 @app.function
@@ -364,10 +373,56 @@ def _(lm_infos):
 
 
 @app.function
+# public/sentencestatus.cex is a '|'-delimited file with a header row
+# ("sentence|vetted") and one row per sentence. The first column is
+# "<analysis file name>:CONTEXT=<context id>" -- the same CONTEXT= value
+# as that sentence's own '#!lm' block, i.e. sentence_context_id() -- and
+# the second is True/False, True meaning "manually vetted". Returns
+# {context id: bool}. A first column without "CONTEXT=" is used whole as
+# the key; blank or malformed lines are skipped.
+def parse_sentence_status(text):
+    status = {}
+    for line_number, line in enumerate(text.splitlines()):
+        line = line.strip()
+        if not line or "|" not in line:
+            continue
+        key, value = (part.strip() for part in line.rsplit("|", 1))
+        if line_number == 0 and value.lower() not in ("true", "false"):
+            continue  # header row
+        if "CONTEXT=" in key:
+            key = key.split("CONTEXT=", 1)[1]
+        status[key] = value.lower() == "true"
+    return status
+
+
+@app.cell
+def _(SENTENCE_STATUS_PATH):
+    # A missing or unreadable status file isn't fatal: every sentence is
+    # just treated as not yet vetted, with a warning above the menu.
+    sentence_status_warning = None
+    try:
+        vetted_by_context = parse_sentence_status(read_location_text(SENTENCE_STATUS_PATH))
+    except OSError as e:
+        vetted_by_context = {}
+        sentence_status_warning = (
+            f"Could not read `public/sentencestatus.cex` ({e}); no sentences are marked as manually vetted."
+        )
+    return sentence_status_warning, vetted_by_context
+
+
+@app.cell
+def _(mo):
+    # Kept in its own cell, separate from sentence_dropdown, because the
+    # dropdown's options depend on this checkbox's value.
+    vetted_only = mo.ui.checkbox(label="*Show only manually vetted sentences* ✅", value=False)
+    return (vetted_only,)
+
+
+@app.function
 # Label one menu entry as "<n>. <citation>: <first six words>…" -- numbered
 # so entries are always unique even when several sentences share (or lack)
 # a citation, or happen to start with the same words.
-def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text):
+def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text, vetted=False):
     preview_text = tokengraph_to_text(sentence_tokengraph)
     words = preview_text.split()
     preview = " ".join(words[:6])
@@ -379,11 +434,19 @@ def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text):
     # all unchanged, so this degrades gracefully for a non-URN citation.
     passage = citation.rsplit(":", 1)[-1] if citation else None
     prefix = f"{passage}: " if passage else ""
-    return f"{index + 1}. {prefix}{preview}{ellipsis}"
+    check = "✅ " if vetted else ""
+    return f"{check}{index + 1}. {prefix}{preview}{ellipsis}"
 
 
 @app.cell
-def _(mo, sentence_slices, sentences, tokengraph_to_text):
+def _(
+    mo,
+    sentence_slices,
+    sentences,
+    tokengraph_to_text,
+    vetted_by_context,
+    vetted_only,
+):
     # Menu for selecting a sentence, across every file that was loaded.
     # Maps each label directly to that sentence's own index, so
     # sentence_dropdown.value is an int usable to index into
@@ -391,19 +454,29 @@ def _(mo, sentence_slices, sentences, tokengraph_to_text):
     # list is shorter, so a split_analysis_by_sentence() failure
     # (sentence_slices left empty, sentences possibly not) can't produce a
     # mismatched, out-of-range index here.
+    # A ✅ marks each manually vetted sentence; with vetted_only checked,
+    # only those are offered at all. Menu numbers stay each sentence's own
+    # position in the whole passage either way, so filtering never
+    # renumbers anything.
     sentence_options = {}
+    vetted_count = sum(
+        1 for sentence in sentences if vetted_by_context.get(sentence_context_id(sentence), False)
+    )
     if sentence_slices:
         for i, (sentence, (sentence_tokengraph, _sentence_verbalunits)) in enumerate(
             zip(sentences, sentence_slices)
         ):
+            vetted = vetted_by_context.get(sentence_context_id(sentence), False)
+            if vetted_only.value and not vetted:
+                continue
             citation = sentence.tokens[0].citation if sentence.tokens else None
-            sentence_options[sentence_label(i, citation, sentence_tokengraph, tokengraph_to_text)] = i
+            sentence_options[sentence_label(i, citation, sentence_tokengraph, tokengraph_to_text, vetted)] = i
 
     sentence_dropdown = mo.ui.dropdown(
         options=sentence_options,
         label="*Sentence*:",
     )
-    return (sentence_dropdown,)
+    return sentence_dropdown, vetted_count
 
 
 @app.cell

@@ -541,3 +541,49 @@ same 17 names; `marimo check` clean on both; `app.run()` on both loads
 17 files / 17 sentences with no errors or warnings, and all 17 `#!lm` entries;
 `marimo export html-wasm` copies `public/analyses/` (17 `.cex` +
 manifest) into the bundle.
+
+## 2026-09-23 (cont.): Manually-vetted marks and filter from public/sentencestatus.cex
+
+Both notebooks now read `marimo/public/sentencestatus.cex` (`sentence|vetted`
+header; first column `<file>:CONTEXT=<context id>`, second `True`/`False`):
+
+- `SENTENCE_STATUS_PATH` added to the locations cell (next to `ANALYSES_DIR`).
+- New `parse_sentence_status(text)` function -> `{context id: bool}`, keyed on
+  the part after `CONTEXT=`, so it matches `sentence_context_id()`.
+- New loading cell -> `vetted_by_context`, `sentence_status_warning`. A
+  missing/unreadable file (`OSError`, which also covers urllib's
+  `URLError`/`HTTPError` under Pyodide) shows a warning and treats every
+  sentence as unvetted.
+- New `vetted_only` checkbox (own cell, since the dropdown depends on it),
+  shown just above the sentence menu.
+- `sentence_label()` takes `vetted=False` and prefixes `✅ `; the dropdown
+  cell skips unvetted sentences when `vetted_only` is checked. Menu numbers
+  stay each sentence's position in the whole passage. The dropdown cell also
+  returns `vetted_count`, shown in the status line.
+
+Verified: `marimo check` clean on both; `app.run()`: 17 status rows, all
+matching a loaded sentence, 1 vetted (no. 17, §6); full menu 17 entries with
+exactly that one marked ✅; re-running the dropdown cell with the checkbox on
+gives only that entry.
+
+Known behaviour: toggling the checkbox rebuilds the dropdown, so the
+current selection resets.
+
+## 2026-09-23 (cont.): Removed obsolete quote_dot_token_ids() workaround
+
+Graphviz diagrams in `reader_w_graphviz.py` were failing ("badly delimited
+number '6.t' ... splits into two tokens"). Cause was local, not upstream:
+arsgrammatica 0.11.2's `tokengraph_to_dot()` already quotes every id via
+`arsgrammatica.dot._dot_id()`, so our older `quote_dot_token_ids()`
+workaround re-quoted them to `""6.t97""` -- an empty quoted id followed by
+a bare `6.t97`, i.e. the very lexing error it was written to prevent.
+
+Removed `quote_dot_token_ids()` and its one call in the `dot_source` cell
+(`reader.py` never had it). The `arsgrammatica>=0.11.2` pin already
+guarantees the quoting: earlier versions aren't installable from the index
+here anyway. The "arsgrammatica bug candidate" noted in the removed comment
+is resolved upstream.
+
+Verified: `marimo check` clean; the notebook's own `dot_source` cell run for
+all 17 sentences renders through `dot -Tsvg` with no warnings or errors
+(17/17; previously 17/17 failed).
