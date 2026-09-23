@@ -19,12 +19,17 @@ cd scratch
 scp -r reader/ nsmith@shotaws.holycross.edu:xfer
 ```
 
+> (Maybe better to keep a subdir of xfer and use rsync?)
+
+
+
 then on shotaws.holycross.edu:
 
 ```bash
 cd xfer/reader
 sudo cp -r . $HOME/web/readers/proarchia
 ```
+
 
 cleanup on shot:
 

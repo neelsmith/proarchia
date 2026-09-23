@@ -64,7 +64,8 @@ def _(
         status_parts = [analysis_status]
     if sentence_status_warning:
         status_parts.append(mo.callout(mo.md(sentence_status_warning), kind="warn"))
-    status_display = mo.vstack(status_parts + [vetted_only, sentence_dropdown])
+    #status_display = mo.vstack(status_parts + [vetted_only, sentence_dropdown])
+    status_display = mo.vstack([vetted_only, sentence_dropdown])
 
     # A cell only ever displays a bare top-level expression as its last
     # statement -- the vstack() calls above are built inside an if/else, so
@@ -78,10 +79,12 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## Selected text
-    """)
+def _(lm_info_display, mo):
+    mo.accordion({
+        "## Language model's comments": 
+            lm_info_display
+
+    })
     return
 
 
@@ -92,58 +95,50 @@ def _(plaintext_html):
 
 
 @app.cell(hide_code=True)
-def _(show_lm_info):
-    show_lm_info
-    return
-
-
-@app.cell(hide_code=True)
-def _(lm_info_display):
-    lm_info_display
-    return
-
-
-@app.cell(hide_code=True)
 def _(maxdepth):
     maxdepth
     return
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## Highlighted by verbal units
-    """)
+def _(indentpsg, mo, vuhtml):
+    mo.accordion({"## Formatted text" : mo.vstack([mo.hstack([vuhtml]), mo.md("### Indented by level of subordination"), indentpsg])})
     return
 
 
 @app.cell(hide_code=True)
-def _(vuhtml):
-    vuhtml
-    return
-
-
-@app.cell(hide_code=True)
-def _(indentpsg, mo):
-    mo.accordion({"***Fold/unfold passage indented by verbal unit***": indentpsg})
+def _(diagram_display, diagram_download, diagram_tool, mo):
+    mo.accordion({
+        "## Diagrams": mo.vstack([
+            diagram_tool,
+            mo.Html(f"<div style='overflow-x: auto; max-width: 100%;'>{diagram_display}</div>"),
+            diagram_download,
+        ])
+    })
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
+    mo.Html("<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.Html("<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
     mo.md("""
-    ## Diagram syntactic relations
+    # Implementation
     """)
     return
 
 
-@app.cell(hide_code=True)
-def _(diagram_tool):
-    diagram_tool
-    return
-
-
-@app.cell(hide_code=True)
+@app.cell
 def _(diagram, diagram_tool, displacy_svg, displacy_warnings, mo):
     # displaCy needs no external dependency at all: displacy_svg is
     # already a complete, ready-to-display SVG string the moment it's
@@ -161,29 +156,7 @@ def _(diagram, diagram_tool, displacy_svg, displacy_warnings, mo):
         )
     else:
         diagram_display = mo.mermaid(diagram)
-
-    diagram_display
-    return
-
-
-@app.cell(hide_code=True)
-def _(diagram_download):
-    diagram_download
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.Html("<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>")
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    # Implementation
-    """)
-    return
+    return (diagram_display,)
 
 
 @app.cell(hide_code=True)
@@ -328,7 +301,14 @@ def _(analysis_paths, manifest_error, read_analyses):
         read_error = "No analysis files listed in public/analyses/manifest.json."
     elif not sentences:
         read_error = "Found analysis files in public/analyses/manifest.json, but none could be read -- see the warnings below."
-    return lm_infos, read_error, read_warnings, sentences, tokengraph, verbalunits
+    return (
+        lm_infos,
+        read_error,
+        read_warnings,
+        sentences,
+        tokengraph,
+        verbalunits,
+    )
 
 
 @app.cell
@@ -540,33 +520,38 @@ def _(maxdepth):
 
 
 @app.cell
-def _(mo):
-    # Off by default: the model/context/reasoning recorded in each
-    # sentence's '#!lm' block is shown only on request.
-    show_lm_info = mo.ui.checkbox(label="*Show language model details*", value=False)
-    return (show_lm_info,)
-
-
-@app.cell
-def _(html, mo, selected_lm_info, selected_tokengraph, show_lm_info):
+def _(html, mo, selected_lm_info):
     lm_info_display = mo.md("")
-    if show_lm_info.value and selected_tokengraph:
-        if selected_lm_info is None:
-            lm_info_display = mo.callout(
-                mo.md("No `#!lm` information was recorded for this sentence."), kind="neutral"
-            )
-        else:
-            def _field(value):
-                return html.escape(value) if value else "<i>(not recorded)</i>"
+    if selected_lm_info is None:
+        lm_info_display = mo.callout(
+            mo.md("No `#!lm` information was recorded for this sentence."), kind="neutral"
+        )
+    else:
+        def _field(value):
+            return html.escape(value) if value else "<i>(not recorded)</i>"
 
-            lm_info_display = mo.callout(
-                mo.Html(
-                    f"<p><b>Model</b>: <code>{_field(selected_lm_info.model)}</code></p>"
-                    f"<p><b>Context</b>: <code>{_field(selected_lm_info.context)}</code></p>"
-                    f"<p><b>Reasoning</b>: {_field(selected_lm_info.reasoning)}</p>"
-                ),
-                kind="info",
-            )
+        # CONTEXT= is dropped here -- it's just the selected sentence's
+        # own first/last token citation-and-id span (see
+        # _sentence_context_identifier() in arsgrammatica/
+        # serialization.py), already implied by the sentence picked
+        # above, so showing it again is redundant. REASONING='s content
+        # is itself Markdown (arsgrammatica collapses it to one line on
+        # write -- see _collapse_to_single_line() -- but doesn't touch
+        # any Markdown syntax within that line), so it goes through
+        # mo.md() rather than html.escape()'d into a plain <p>, or
+        # emphasis/code/etc. in it would show up as literal
+        # asterisks/backticks instead of actually rendering.
+        lm_info_display = mo.callout(
+            mo.vstack(
+                [
+                    mo.Html(f"<p><b>Model</b>: <code>{_field(selected_lm_info.model)}</code></p>"),
+                    mo.md(f"**Reasoning**: {selected_lm_info.reasoning}")
+                    if selected_lm_info.reasoning
+                    else mo.Html("<p><b>Reasoning</b>: <i>(not recorded)</i></p>"),
+                ]
+            ),
+            kind="info",
+        )
     return (lm_info_display,)
 
 
@@ -646,9 +631,13 @@ def _(
 def _(html, mo, selected_tokengraph, tokengraph_to_text):
     # Plain, uncolored text -- tokengraph_to_text() never emits HTML, but
     # the underlying surface text is still escaped before going into
-    # mo.Html().
+    # mo.Html(). Wrapped in a span sized relative to the surrounding body
+    # text (em, not a fixed px) so it stays a little larger than regular
+    # text but still scales with it.
     plaintext_html = mo.Html(
-        "<b><i>Passage text</i></b>: " + html.escape(tokengraph_to_text(selected_tokengraph))
+        "<span style='font-size: 1.15em;'>"
+        "<b><i>Passage text</i></b>: " + html.escape(tokengraph_to_text(selected_tokengraph)) +
+        "</span>"
     )
     return (plaintext_html,)
 
@@ -656,7 +645,7 @@ def _(html, mo, selected_tokengraph, tokengraph_to_text):
 @app.cell
 def _(depth, mo, selected_tokengraph, tokengraph_to_html):
     vuhtml = mo.Html(
-        "<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(selected_tokengraph, depth=depth)
+        "<div><b>Highlighted by verbal unit</b>: " + tokengraph_to_html(selected_tokengraph, depth=depth) + "</div>"
     )
     return (vuhtml,)
 
