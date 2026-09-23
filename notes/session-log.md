@@ -479,3 +479,259 @@ Pyodide is documented to transparently proxy through the browser's
 `fetch()` for same-origin requests, but that proxying itself is the one
 piece that can only be confirmed by actually opening the exported page
 in a browser.
+
+## 2026-09-23 (cont.): Moved generate_public_manifest.py to utilities/
+
+Moved `marimo/generate_public_manifest.py` to `utilities/generate_public_manifest.py`
+at the user's request -- it's a standalone maintenance script, not part
+of either notebook, so it belongs with this project's other utility
+scripts rather than inside `marimo/`. Updated its `PUBLIC_DIR` constant
+(`Path(__file__).parent / "public"` -> `Path(__file__).parent.parent / "marimo" / "public"`,
+since `utilities/` and `marimo/` are now siblings) and its own
+docstring/usage line to match the new path. Re-ran it from the new
+location to confirm it still finds `marimo/public/` correctly -- wrote
+the same 17 filenames as before. Also fixed the one other reference to
+the old path, in `notes/wasmexport.md`.
+
+## 2026-09-23 (cont.): Optional display of '#!lm' model info in both notebooks
+
+Added to both `marimo/reader.py` and `marimo/reader_w_graphviz.py`
+(identical changes):
+
+- The loading cell now also returns `lm_infos` (it was already collecting
+  them from `read_analyses()`, padded with `None` for files without a
+  `#!lm` block, but not exposing them).
+- New `sentence_context_id(sentence)` function rebuilds the
+  `CONTEXT=` identifier arsgrammatica writes
+  (`<citation>.<id>-<citation>.<id>` of the sentence's first/last token;
+  arsgrammatica's own `_sentence_context_identifier()` is private).
+- New `lm_by_context` cell: `{info.context: info}` over every loaded entry.
+- The selection cell now also returns `selected_lm_info`, matched by
+  CONTEXT, falling back to the positionally aligned `lm_infos` entry.
+- New `show_lm_info` checkbox (off by default) and `lm_info_display` cell,
+  shown under "Selected text" right after the passage text: a callout with
+  Model, Context and Reasoning for the selected sentence, or a note that
+  no `#!lm` data was recorded for it.
+- Consolidated `import html` into the imports cell (was `import html as
+  _html` in one cell; a second one tripped `marimo check`'s
+  private-import-alias rule).
+
+Verified: `marimo check` clean on both; `app.run()` on both loads 17
+sentences and all 17 match a `#!lm` entry by CONTEXT; ran the
+`lm_info_display` cell directly with the checkbox on, for both a real
+entry and `None`.
+
+## 2026-09-23 (cont.): Moved analysis files to marimo/public/analyses/
+
+At the user's request, moved all 17 `.cex` files and `manifest.json` from
+`marimo/public/` into `marimo/public/analyses/` (with `git mv`, so the
+renames are staged but not committed). The manifest moved with the
+files it lists.
+
+- Both notebooks: the `PUBLIC_DIR` cell is now `ANALYSES_DIR =
+  mo.notebook_location() / "public" / "analyses"`; manifest and file
+  paths, the status line, and the error messages now say
+  `public/analyses/`.
+- `utilities/generate_public_manifest.py`: `PUBLIC_DIR` -> `ANALYSES_DIR`
+  (`.../marimo/public/analyses`); docstring updated.
+- `notes/wasmexport.md`: path in the re-run reminder updated.
+
+Verified: regenerating the manifest from the new location reproduces the
+same 17 names; `marimo check` clean on both; `app.run()` on both loads
+17 files / 17 sentences with no errors or warnings, and all 17 `#!lm` entries;
+`marimo export html-wasm` copies `public/analyses/` (17 `.cex` +
+manifest) into the bundle.
+
+## 2026-09-23 (cont.): Manually-vetted marks and filter from public/sentencestatus.cex
+
+Both notebooks now read `marimo/public/sentencestatus.cex` (`sentence|vetted`
+header; first column `<file>:CONTEXT=<context id>`, second `True`/`False`):
+
+- `SENTENCE_STATUS_PATH` added to the locations cell (next to `ANALYSES_DIR`).
+- New `parse_sentence_status(text)` function -> `{context id: bool}`, keyed on
+  the part after `CONTEXT=`, so it matches `sentence_context_id()`.
+- New loading cell -> `vetted_by_context`, `sentence_status_warning`. A
+  missing/unreadable file (`OSError`, which also covers urllib's
+  `URLError`/`HTTPError` under Pyodide) shows a warning and treats every
+  sentence as unvetted.
+- New `vetted_only` checkbox (own cell, since the dropdown depends on it),
+  shown just above the sentence menu.
+- `sentence_label()` takes `vetted=False` and prefixes `✅ `; the dropdown
+  cell skips unvetted sentences when `vetted_only` is checked. Menu numbers
+  stay each sentence's position in the whole passage. The dropdown cell also
+  returns `vetted_count`, shown in the status line.
+
+Verified: `marimo check` clean on both; `app.run()`: 17 status rows, all
+matching a loaded sentence, 1 vetted (no. 17, §6); full menu 17 entries with
+exactly that one marked ✅; re-running the dropdown cell with the checkbox on
+gives only that entry.
+
+Known behaviour: toggling the checkbox rebuilds the dropdown, so the
+current selection resets.
+
+## 2026-09-23 (cont.): Removed obsolete quote_dot_token_ids() workaround
+
+Graphviz diagrams in `reader_w_graphviz.py` were failing ("badly delimited
+number '6.t' ... splits into two tokens"). Cause was local, not upstream:
+arsgrammatica 0.11.2's `tokengraph_to_dot()` already quotes every id via
+`arsgrammatica.dot._dot_id()`, so our older `quote_dot_token_ids()`
+workaround re-quoted them to `""6.t97""` -- an empty quoted id followed by
+a bare `6.t97`, i.e. the very lexing error it was written to prevent.
+
+Removed `quote_dot_token_ids()` and its one call in the `dot_source` cell
+(`reader.py` never had it). The `arsgrammatica>=0.11.2` pin already
+guarantees the quoting: earlier versions aren't installable from the index
+here anyway. The "arsgrammatica bug candidate" noted in the removed comment
+is resolved upstream.
+
+Verified: `marimo check` clean; the notebook's own `dot_source` cell run for
+all 17 sentences renders through `dot -Tsvg` with no warnings or errors
+(17/17; previously 17/17 failed).
+
+## 2026-09-23 (cont.): LM info display -- drop Context, render Reasoning as Markdown
+
+User had hand-added a "Show language model details" checkbox + display
+(`show_lm_info`/`lm_info_display`) to both notebooks since my last edits
+to this section -- confirmed by re-reading both files fresh before
+touching anything, per the established safe-edit workflow, rather than
+assuming their prior state. Asked for two changes to that display:
+drop the `CONTEXT=` field (redundant -- it's just the selected
+sentence's own citation span) and render `REASONING=`'s content as
+Markdown rather than plain escaped text.
+
+Checked arsgrammatica's `serialization.py` module docstring/`LMInfo`
+directly (not just assuming) to confirm: `REASONING=`'s value is
+free-form prose that `_collapse_to_single_line()` flattens to one line
+on write (newlines/paragraph breaks -> single spaces) but otherwise
+leaves untouched -- so any Markdown syntax within that one line (bold,
+italic, code spans, links, etc.) survives a round trip through
+write_analyses()/read_analyses() intact; it just can't contain block-
+level constructs that depend on being on their own line.
+
+Edited the `lm_info_display` cell identically in both `reader.py` and
+`reader_w_graphviz.py`: dropped the `<p><b>Context</b>: ...` line
+entirely; kept the Model line exactly as before (still
+`html.escape()`d into `mo.Html(...)`, unchanged); and replaced the
+Reasoning line's `html.escape()`-into-`<p>` with
+`mo.md(f"**Reasoning**: {selected_lm_info.reasoning}")` (falling back
+to the same "(not recorded)" `mo.Html` when reasoning is empty), wrapped
+together with the Model line in `mo.vstack([...])` since `mo.callout`
+takes one element.
+
+Verified, not just asserted: `marimo check` on both files (no errors);
+and, since no file in this repo's own `data/`/`public/` actually carries
+a `#!lm` block right now to test against live, a synthetic check
+reproducing the cell's exact logic against a fake `LMInfo` with
+Markdown-bearing reasoning (`**cano**`, `*I sing*`, `` `arma` ``) --
+confirmed in the real rendered output that those became actual
+`<strong>`/`<em>`/`<code>` elements (not literal asterisks/backticks),
+that the `Aeneid 1.1.t0-...` context string appears nowhere in the
+output, and that the `reasoning=None`/`model=None` "(not recorded)"
+fallback still renders correctly.
+
+## 2026-09-23 (cont.): Larger font for plaintext_html in reader_w_graphviz.py
+
+User asked, for `reader_w_graphviz.py` only (their own words: "I've got
+reader_w_graphviz.py looking the way I want with one exception"), to
+make the `plaintext_html` passage-text display a little larger than
+regular body text. Re-read the file fresh before editing, per the usual
+workflow.
+
+Wrapped the cell's existing content in `<span style='font-size:
+1.15em;'>...</span>` rather than a fixed px value, so it scales with
+whatever the surrounding body text size actually is (theme/zoom-
+independent) instead of being pinned to an absolute size. Left the
+label's `<b><i>Passage text</i></b>` prefix and the `html.escape()`
+call on the passage text itself untouched -- only added the wrapping
+span.
+
+Verified: `marimo check` clean; and a direct render against a real
+sentence from `public/analyses/` (not a synthetic one) confirms the
+full line -- label and escaped passage text together -- comes back
+wrapped in the new span, e.g. `<span style='font-size:
+1.15em;'><b><i>Passage text</i></b>: si quid est in me ingeni,
+iudices, ...</span>`.
+
+Note: did not touch `reader.py`'s own `plaintext_html` cell, which is
+still worded identically without the size bump -- the user's request
+was scoped to `reader_w_graphviz.py` specifically.
+
+## 2026-09-23 (cont.): Reorganized reader.py to match reader_w_graphviz.py's layout
+
+User asked to reorganize `reader.py` "to work just like `reader_w_graphviz.py`"
+(minus graphviz, obviously). Re-read both files completely fresh first --
+reader_w_graphviz.py had diverged substantially through the user's own
+live hand-editing over the last several turns (sentence-vetting feature,
+`public/analyses/` restructure, the accordion-based layout from the
+last few turns' consultations, the larger plaintext_html font, the
+vuhtml div-wrap fix). Found that the underlying data-loading/logic
+layer (ANALYSES_DIR, is_remote_location/read_location_text/
+resolve_readable_path, the manifest-driven analysis_paths, vetted_by_context/
+sentence_status_warning, sentence_dropdown, selected_tokengraph/
+selected_lm_info) was ALREADY identical between the two files -- the
+user had apparently kept that part in sync themselves. The actual gap
+was entirely in the *display* layer.
+
+Ported into `reader.py`, verified against reader_w_graphviz.py's exact
+current text:
+
+- Replaced the old flat cluster of separate header/display cells
+  ("## Selected text", "## Highlighted by verbal units", "## Diagram
+  syntactic relations" headers; standalone `plaintext_html`/
+  `show_lm_info`/`vuhtml`/`diagram_tool`/`diagram_display`/
+  `diagram_download` cells) with the new accordion-based layout:
+  `mo.accordion({"## Language model's comments": lm_info_display})`,
+  `plaintext_html` and `maxdepth` still bare, `mo.accordion({"##
+  Formatted text": mo.vstack([mo.hstack([vuhtml]), mo.md("###
+  Indented..."), indentpsg])})`, and `mo.accordion({"## Diagrams":
+  mo.vstack([diagram_tool, mo.Html(f"<div style='overflow-x: auto;
+  max-width: 100%;'>{diagram_display}</div>"), diagram_download])})` --
+  the last one including the horizontal-scroll fix from a couple turns
+  ago, since without it a wide Mermaid/displaCy diagram would get
+  clipped by the accordion's own `overflow: hidden` the same way it did
+  in reader_w_graphviz.py before that fix.
+- Moved `diagram_display`'s construction out of that display cluster
+  (it used to build-and-bare-display itself in one cell) into its own
+  construct-only cell (`return (diagram_display,)`, no bare display),
+  positioned right after the "# Implementation" header -- matching
+  where reader_w_graphviz.py now keeps it. Kept reader.py's own existing
+  comment (mermaid/displaCy only, pointing to reader_w_graphviz.py for
+  the graphviz option) rather than porting graphviz-specific wording.
+- Dropped the `show_lm_info` checkbox cell entirely and removed its
+  gating from `lm_info_display`'s construction (now shows whenever a
+  sentence's LM info exists) -- reader_w_graphviz.py still has an
+  orphaned, unused `show_lm_info` checkbox cell (dead code: nothing
+  reads it any more, since the accordion itself is now the show/hide
+  control), which looked like leftover from live experimentation rather
+  than an intentional design choice, so I didn't propagate it.
+- `plaintext_html`: added the `font-size: 1.15em` span (this had only
+  been asked for in `reader_w_graphviz.py` a couple turns ago; porting
+  it here since "work just like" now covers it).
+- `vuhtml`: wrapped in a single `<div>` and dropped the `<i>` italic tag
+  around "Highlighted by verbal unit", matching reader_w_graphviz.py's
+  current wording exactly (the div-wrap is the fix for vstack's
+  every-word-stacks bug from a couple turns ago).
+
+Deliberately did NOT port two things from reader_w_graphviz.py that
+looked like accidental leftovers rather than intended changes, and
+should be confirmed with the user rather than silently copied:
+1. Its status-display cell has the old working line commented out
+   (`#status_display = mo.vstack(status_parts + [vetted_only,
+   sentence_dropdown])`) replaced by one that drops `status_parts`
+   entirely (`status_display = mo.vstack([vetted_only,
+   sentence_dropdown])`) -- meaning the "N sentences loaded" message
+   and any read-error/warning callouts never actually display any more
+   in reader_w_graphviz.py, even though they're still computed.
+   reader.py keeps its own current (uncommented, fully working) version.
+2. Its `<hr/>` cell between "## Diagrams" and "# Implementation" is
+   duplicated (two identical cells back to back) -- reader.py keeps
+   just one.
+
+Verified: `marimo check` clean; `app.run()` against real `public/`
+data -- 17 sentences, 1 vetted, `diagram_tool.options` correctly
+`{mermaid, displacy}` only (no graphviz), `diagram_display` populated,
+`show_lm_info` no longer in `defs` at all; direct construction of
+`plaintext_html`/`vuhtml` against a real sentence confirms the new
+span/div wrapping shows up with real content, not just empty
+placeholders; and a full `marimo export html-wasm --mode run --execute
+-f` on the restructured file completes cleanly end to end.

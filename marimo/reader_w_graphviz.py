@@ -43,8 +43,11 @@ def _(
     read_error,
     read_warnings,
     sentence_dropdown,
+    sentence_status_warning,
     sentences,
     split_error,
+    vetted_count,
+    vetted_only,
 ):
     if read_error is not None:
         analysis_status = mo.callout(mo.md(f"Could not load any analyses: {read_error}"), kind="danger")
@@ -56,7 +59,8 @@ def _(
     else:
         analysis_status = mo.md(
             f"## Select a sentence\n\n"
-            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/`.*"
+            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/analyses/`; "
+            f"{vetted_count} manually vetted (✅).*"
         )
 
     if read_warnings:
@@ -64,9 +68,13 @@ def _(
             mo.md("Some files could not be read and were skipped:\n\n" + "\n".join(f"- {w}" for w in read_warnings)),
             kind="warn",
         )
-        status_display = mo.vstack([analysis_status, warnings_callout, sentence_dropdown])
+        status_parts = [analysis_status, warnings_callout]
     else:
-        status_display = mo.vstack([analysis_status, sentence_dropdown])
+        status_parts = [analysis_status]
+    if sentence_status_warning:
+        status_parts.append(mo.callout(mo.md(sentence_status_warning), kind="warn"))
+    #status_display = mo.vstack(status_parts + [vetted_only, sentence_dropdown])
+    status_display = mo.vstack([vetted_only, sentence_dropdown])
 
     # A cell only ever displays a bare top-level expression as its last
     # statement -- the vstack() calls above are built inside an if/else, so
@@ -80,10 +88,12 @@ def _(
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## Selected text
-    """)
+def _(lm_info_display, mo):
+    mo.accordion({
+        "## Language model's comments": 
+            lm_info_display
+
+    })
     return
 
 
@@ -94,46 +104,50 @@ def _(plaintext_html):
 
 
 @app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    ## Highlighted by verbal units
-    """)
-    return
-
-
-@app.cell(hide_code=True)
 def _(maxdepth):
     maxdepth
     return
 
 
 @app.cell(hide_code=True)
-def _(vuhtml):
-    vuhtml
+def _(indentpsg, mo, vuhtml):
+    mo.accordion({"## Formatted text" : mo.vstack([mo.hstack([vuhtml]), mo.md("### Indented by level of subordination"), indentpsg])})
     return
 
 
 @app.cell(hide_code=True)
-def _(indentpsg, mo):
-    mo.accordion({"***Fold/unfold passage indented by verbal unit***": indentpsg})
+def _(diagram_display, diagram_download, diagram_tool, mo):
+    mo.accordion({
+        "## Diagrams": mo.vstack([
+            diagram_tool,
+            mo.Html(f"<div style='overflow-x: auto; max-width: 100%;'>{diagram_display}</div>"),
+            diagram_download,
+        ])
+    })
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.Html("<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>")
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.Html("<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>")
     return
 
 
 @app.cell(hide_code=True)
 def _(mo):
     mo.md("""
-    ## Diagram syntactic relations
+    # Implementation
     """)
     return
 
 
-@app.cell(hide_code=True)
-def _(diagram_tool):
-    diagram_tool
-    return
-
-
-@app.cell(hide_code=True)
+@app.cell
 def _(
     diagram,
     diagram_tool,
@@ -188,28 +202,9 @@ def _(
     else:
         diagram_display = mo.mermaid(diagram)
 
-    diagram_display
-    return
 
-
-@app.cell(hide_code=True)
-def _(diagram_download):
-    diagram_download
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.Html("<hr/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>")
-    return
-
-
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md("""
-    # Implementation
-    """)
-    return
+    #diagram_display    
+    return (diagram_display,)
 
 
 @app.cell(hide_code=True)
@@ -225,13 +220,18 @@ def _(mo):
     # Where arsgrammatica's own review notebook lets the user browse for a
     # single analysis file, this one always reads every one already saved
     # for this project -- see notes/project.md -- so there's no
-    # file_browser widget here at all. `public/` (see is_remote_location()
-    # below) holds a snapshot of this project's `data/` directory, kept in
-    # sync by generate_public_manifest.py -- see that script's own
+    # file_browser widget here at all. `public/analyses/` (see
+    # is_remote_location() below) holds a snapshot of this project's `data/` directory, kept in
+    # sync by utilities/generate_public_manifest.py -- see that script's own
     # docstring for why reading goes through a manifest file rather than
     # a directory listing.
-    PUBLIC_DIR = mo.notebook_location() / "public"
-    return (PUBLIC_DIR,)
+    # `marimo export html-wasm` only copies `public/` itself (with all
+    # its subdirectories) next to the exported notebook, so the
+    # analyses have to live somewhere under it.
+    ANALYSES_DIR = mo.notebook_location() / "public" / "analyses"
+    # Which sentences have been manually vetted -- see load_sentence_status().
+    SENTENCE_STATUS_PATH = mo.notebook_location() / "public" / "sentencestatus.cex"
+    return ANALYSES_DIR, SENTENCE_STATUS_PATH
 
 
 @app.function
@@ -303,15 +303,15 @@ def analysis_sort_key(path):
 
 
 @app.cell
-def _(PUBLIC_DIR, json):
+def _(ANALYSES_DIR, json):
     manifest_error = None
     try:
-        manifest_names = json.loads(read_location_text(PUBLIC_DIR / "manifest.json"))
+        manifest_names = json.loads(read_location_text(ANALYSES_DIR / "manifest.json"))
     except (OSError, ValueError) as e:
         manifest_names = []
         manifest_error = str(e)
 
-    analysis_paths = sorted((PUBLIC_DIR / name for name in manifest_names), key=analysis_sort_key)
+    analysis_paths = sorted((ANALYSES_DIR / name for name in manifest_names), key=analysis_sort_key)
     return analysis_paths, manifest_error
 
 
@@ -344,12 +344,19 @@ def _(analysis_paths, manifest_error, read_analyses):
 
     read_error = None
     if manifest_error is not None:
-        read_error = f"Could not read public/manifest.json: {manifest_error}"
+        read_error = f"Could not read public/analyses/manifest.json: {manifest_error}"
     elif not analysis_paths:
-        read_error = "No analysis files listed in public/manifest.json."
+        read_error = "No analysis files listed in public/analyses/manifest.json."
     elif not sentences:
-        read_error = "Found analysis files in public/manifest.json, but none could be read -- see the warnings below."
-    return read_error, read_warnings, sentences, tokengraph, verbalunits
+        read_error = "Found analysis files in public/analyses/manifest.json, but none could be read -- see the warnings below."
+    return (
+        lm_infos,
+        read_error,
+        read_warnings,
+        sentences,
+        tokengraph,
+        verbalunits,
+    )
 
 
 @app.cell
@@ -370,10 +377,80 @@ def _(sentences, split_analysis_by_sentence, tokengraph, verbalunits):
 
 
 @app.function
+# The sentence-style identifier arsgrammatica writes as each '#!lm'
+# block's CONTEXT= value: "<citation>.<id>-<citation>.<id>" for the
+# sentence's own first and last token (see LMInfo's docstring and
+# _sentence_context_identifier() in arsgrammatica/serialization.py --
+# private there, so re-derived here). None for a sentence with no tokens.
+def sentence_context_id(sentence):
+    if not sentence.tokens:
+        return None
+    first, last = sentence.tokens[0], sentence.tokens[-1]
+    return f"{first.citation}.{first.id}-{last.citation}.{last.id}"
+
+
+@app.cell
+def _(lm_infos):
+    # Every loaded '#!lm' entry, keyed by its own CONTEXT= value, so the
+    # selected sentence's entry is found by what it actually identifies
+    # rather than by position alone (lm_infos is padded with None for
+    # files lacking a '#!lm' block, so position still works as a
+    # fallback -- see selected_lm_info below).
+    lm_by_context = {info.context: info for info in lm_infos if info is not None and info.context}
+    return (lm_by_context,)
+
+
+@app.function
+# public/sentencestatus.cex is a '|'-delimited file with a header row
+# ("sentence|vetted") and one row per sentence. The first column is
+# "<analysis file name>:CONTEXT=<context id>" -- the same CONTEXT= value
+# as that sentence's own '#!lm' block, i.e. sentence_context_id() -- and
+# the second is True/False, True meaning "manually vetted". Returns
+# {context id: bool}. A first column without "CONTEXT=" is used whole as
+# the key; blank or malformed lines are skipped.
+def parse_sentence_status(text):
+    status = {}
+    for line_number, line in enumerate(text.splitlines()):
+        line = line.strip()
+        if not line or "|" not in line:
+            continue
+        key, value = (part.strip() for part in line.rsplit("|", 1))
+        if line_number == 0 and value.lower() not in ("true", "false"):
+            continue  # header row
+        if "CONTEXT=" in key:
+            key = key.split("CONTEXT=", 1)[1]
+        status[key] = value.lower() == "true"
+    return status
+
+
+@app.cell
+def _(SENTENCE_STATUS_PATH):
+    # A missing or unreadable status file isn't fatal: every sentence is
+    # just treated as not yet vetted, with a warning above the menu.
+    sentence_status_warning = None
+    try:
+        vetted_by_context = parse_sentence_status(read_location_text(SENTENCE_STATUS_PATH))
+    except OSError as e:
+        vetted_by_context = {}
+        sentence_status_warning = (
+            f"Could not read `public/sentencestatus.cex` ({e}); no sentences are marked as manually vetted."
+        )
+    return sentence_status_warning, vetted_by_context
+
+
+@app.cell
+def _(mo):
+    # Kept in its own cell, separate from sentence_dropdown, because the
+    # dropdown's options depend on this checkbox's value.
+    vetted_only = mo.ui.checkbox(label="*Show only manually vetted sentences* ✅", value=False)
+    return (vetted_only,)
+
+
+@app.function
 # Label one menu entry as "<n>. <citation>: <first six words>…" -- numbered
 # so entries are always unique even when several sentences share (or lack)
 # a citation, or happen to start with the same words.
-def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text):
+def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text, vetted=False):
     preview_text = tokengraph_to_text(sentence_tokengraph)
     words = preview_text.split()
     preview = " ".join(words[:6])
@@ -385,11 +462,19 @@ def sentence_label(index, citation, sentence_tokengraph, tokengraph_to_text):
     # all unchanged, so this degrades gracefully for a non-URN citation.
     passage = citation.rsplit(":", 1)[-1] if citation else None
     prefix = f"{passage}: " if passage else ""
-    return f"{index + 1}. {prefix}{preview}{ellipsis}"
+    check = "✅ " if vetted else ""
+    return f"{check}{index + 1}. {prefix}{preview}{ellipsis}"
 
 
 @app.cell
-def _(mo, sentence_slices, sentences, tokengraph_to_text):
+def _(
+    mo,
+    sentence_slices,
+    sentences,
+    tokengraph_to_text,
+    vetted_by_context,
+    vetted_only,
+):
     # Menu for selecting a sentence, across every file that was loaded.
     # Maps each label directly to that sentence's own index, so
     # sentence_dropdown.value is an int usable to index into
@@ -397,23 +482,33 @@ def _(mo, sentence_slices, sentences, tokengraph_to_text):
     # list is shorter, so a split_analysis_by_sentence() failure
     # (sentence_slices left empty, sentences possibly not) can't produce a
     # mismatched, out-of-range index here.
+    # A ✅ marks each manually vetted sentence; with vetted_only checked,
+    # only those are offered at all. Menu numbers stay each sentence's own
+    # position in the whole passage either way, so filtering never
+    # renumbers anything.
     sentence_options = {}
+    vetted_count = sum(
+        1 for sentence in sentences if vetted_by_context.get(sentence_context_id(sentence), False)
+    )
     if sentence_slices:
         for i, (sentence, (sentence_tokengraph, _sentence_verbalunits)) in enumerate(
             zip(sentences, sentence_slices)
         ):
+            vetted = vetted_by_context.get(sentence_context_id(sentence), False)
+            if vetted_only.value and not vetted:
+                continue
             citation = sentence.tokens[0].citation if sentence.tokens else None
-            sentence_options[sentence_label(i, citation, sentence_tokengraph, tokengraph_to_text)] = i
+            sentence_options[sentence_label(i, citation, sentence_tokengraph, tokengraph_to_text, vetted)] = i
 
     sentence_dropdown = mo.ui.dropdown(
         options=sentence_options,
         label="*Sentence*:",
     )
-    return (sentence_dropdown,)
+    return sentence_dropdown, vetted_count
 
 
 @app.cell
-def _(sentence_dropdown, sentence_slices, sentences):
+def _(lm_by_context, lm_infos, sentence_dropdown, sentence_slices, sentences):
     # The currently selected sentence's own tokengraph/verbalunits slice --
     # empty until a sentence is actually picked, which every rendering
     # utility below already handles gracefully (an empty diagram/string).
@@ -423,11 +518,17 @@ def _(sentence_dropdown, sentence_slices, sentences):
     selected_tokengraph, selected_verbalunits = [], []
     selected_citation = None
     selected_sentence = None
+    selected_lm_info = None
     if sentence_dropdown.value is not None and 0 <= sentence_dropdown.value < len(sentence_slices):
         selected_tokengraph, selected_verbalunits = sentence_slices[sentence_dropdown.value]
         selected_sentence = sentences[sentence_dropdown.value]
         selected_citation = selected_sentence.tokens[0].citation if selected_sentence.tokens else None
-    return selected_citation, selected_tokengraph
+        # Match on CONTEXT first; fall back to the positionally aligned
+        # entry only if no '#!lm' block names this sentence at all.
+        selected_lm_info = lm_by_context.get(sentence_context_id(selected_sentence))
+        if selected_lm_info is None and sentence_dropdown.value < len(lm_infos):
+            selected_lm_info = lm_infos[sentence_dropdown.value]
+    return selected_citation, selected_lm_info, selected_tokengraph
 
 
 @app.cell(hide_code=True)
@@ -436,6 +537,51 @@ def _(mo):
     ## Format output display
     """)
     return
+
+
+@app.cell
+def _(mo):
+    # Off by default: the model/context/reasoning recorded in each
+    # sentence's '#!lm' block is shown only on request.
+    show_lm_info = mo.ui.checkbox(label="*Show language model's comments*", value=False)
+    return
+
+
+@app.cell
+def _(html, mo, selected_lm_info):
+    lm_info_display = mo.md("")
+    #if show_lm_info.value and selected_tokengraph:
+    if selected_lm_info is None:
+        lm_info_display = mo.callout(
+            mo.md("No `#!lm` information was recorded for this sentence."), kind="neutral"
+        )
+    else:
+        def _field(value):
+            return html.escape(value) if value else "<i>(not recorded)</i>"
+
+        # CONTEXT= is dropped here -- it's just the selected sentence's
+        # own first/last token citation-and-id span (see
+        # _sentence_context_identifier() in arsgrammatica/
+        # serialization.py), already implied by the sentence picked
+        # above, so showing it again is redundant. REASONING='s content
+        # is itself Markdown (arsgrammatica collapses it to one line on
+        # write -- see _collapse_to_single_line() -- but doesn't touch
+        # any Markdown syntax within that line), so it goes through
+        # mo.md() rather than html.escape()'d into a plain <p>, or
+        # emphasis/code/etc. in it would show up as literal
+        # asterisks/backticks instead of actually rendering.
+        lm_info_display = mo.callout(
+            mo.vstack(
+                [
+                    mo.Html(f"<p><b>Model</b>: <code>{_field(selected_lm_info.model)}</code></p>"),
+                    mo.md(f"**Reasoning**: {selected_lm_info.reasoning}")
+                    if selected_lm_info.reasoning
+                    else mo.Html("<p><b>Reasoning</b>: <i>(not recorded)</i></p>"),
+                ]
+            ),
+            kind="info",
+        )
+    return (lm_info_display,)
 
 
 @app.cell
@@ -490,38 +636,15 @@ def _(depth, selected_tokengraph, tokengraph_to_mermaid):
     return (diagram,)
 
 
-@app.function
-# arsgrammatica's tokengraph_to_dot() (see arsgrammatica/dot.py) writes
-# each token's own id -- "1.t2", "1.t19_implied", etc. -- as a BARE,
-# unquoted DOT identifier, both as a node's own name and in every `->`
-# edge that references it. DOT's grammar has no identifier production
-# that starts with a digit and also contains letters; the closest thing,
-# a numeral, only allows digits and a single "." -- so Graphviz's own
-# lexer reads an id like "1.t2" as the numeral "1." immediately followed
-# by a SEPARATE identifier "t2" ("syntax ambiguity - badly delimited
-# number ... splits into two tokens"). This is worse than a cosmetic
-# warning: every "N.tM" id with the same leading "N." collapses onto ONE
-# shared node literally named "N." in the rendered graph, silently
-# merging unrelated tokens' edges together. Quoting every such id turns
-# it into a single, unambiguous DOT QUOTED_ID token instead, which fixes
-# the actual graph structure, not just the warning. (Filed as an
-# arsgrammatica bug candidate; this is a local workaround pending a fix
-# there, so it stays for both notebooks in this repo, but only this one
-# actually invokes `dot` -- reader.py doesn't offer Graphviz at all.)
-def quote_dot_token_ids(dot_source):
-    import re
-
-    return re.sub(r"\b(\d+\.t\d+(?:_implied)?)\b", r'"\1"', dot_source)
-
-
 @app.cell
 def _(depth, selected_tokengraph, tokengraph_to_dot):
     # Cheap to always compute regardless of which tool is currently
     # selected -- tokengraph_to_dot() is pure string building, unlike
     # actually rendering it, which needs the graphviz package and the
     # `dot` executable (handled in diagram_display above).
+    # tokengraph_to_dot() already quotes every token id (arsgrammatica
+    # >= 0.11.2's _dot_id()), so its output is passed to Graphviz as-is.
     dot_source, dot_warnings = tokengraph_to_dot(selected_tokengraph, aat_depth=depth)
-    dot_source = quote_dot_token_ids(dot_source)
     return dot_source, dot_warnings
 
 
@@ -592,14 +715,16 @@ def _(
 
 
 @app.cell
-def _(mo, selected_tokengraph, tokengraph_to_text):
+def _(html, mo, selected_tokengraph, tokengraph_to_text):
     # Plain, uncolored text -- tokengraph_to_text() never emits HTML, but
     # the underlying surface text is still escaped before going into
-    # mo.Html().
-    import html as _html
-
+    # mo.Html(). Wrapped in a span sized relative to the surrounding body
+    # text (em, not a fixed px) so it stays a little larger than regular
+    # text but still scales with it.
     plaintext_html = mo.Html(
-        "<b><i>Passage text</i></b>: " + _html.escape(tokengraph_to_text(selected_tokengraph))
+        "<span style='font-size: 1.15em;'>"
+        "<b><i>Passage text</i></b>: " + html.escape(tokengraph_to_text(selected_tokengraph)) +
+        "</span>"
     )
     return (plaintext_html,)
 
@@ -607,7 +732,7 @@ def _(mo, selected_tokengraph, tokengraph_to_text):
 @app.cell
 def _(depth, mo, selected_tokengraph, tokengraph_to_html):
     vuhtml = mo.Html(
-        "<b><i>Highlighted by verbal unit</i></b>: " + tokengraph_to_html(selected_tokengraph, depth=depth)
+        "<div><b>Highlighted by verbal unit</b>: " + tokengraph_to_html(selected_tokengraph, depth=depth) + "</div>"
     )
     return (vuhtml,)
 
@@ -629,6 +754,7 @@ def _(mo):
 
 @app.cell
 def _():
+    import html
     import json
 
     from arsgrammatica import (
@@ -657,9 +783,10 @@ def _():
         graphviz = None
         graphviz_available = False
     return (
-        json,
         graphviz,
         graphviz_available,
+        html,
+        json,
         max_subordination_depth,
         read_analyses,
         split_analysis_by_sentence,
