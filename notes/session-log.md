@@ -492,3 +492,52 @@ docstring/usage line to match the new path. Re-ran it from the new
 location to confirm it still finds `marimo/public/` correctly -- wrote
 the same 17 filenames as before. Also fixed the one other reference to
 the old path, in `notes/wasmexport.md`.
+
+## 2026-09-23 (cont.): Optional display of '#!lm' model info in both notebooks
+
+Added to both `marimo/reader.py` and `marimo/reader_w_graphviz.py`
+(identical changes):
+
+- The loading cell now also returns `lm_infos` (it was already collecting
+  them from `read_analyses()`, padded with `None` for files without a
+  `#!lm` block, but not exposing them).
+- New `sentence_context_id(sentence)` function rebuilds the
+  `CONTEXT=` identifier arsgrammatica writes
+  (`<citation>.<id>-<citation>.<id>` of the sentence's first/last token;
+  arsgrammatica's own `_sentence_context_identifier()` is private).
+- New `lm_by_context` cell: `{info.context: info}` over every loaded entry.
+- The selection cell now also returns `selected_lm_info`, matched by
+  CONTEXT, falling back to the positionally aligned `lm_infos` entry.
+- New `show_lm_info` checkbox (off by default) and `lm_info_display` cell,
+  shown under "Selected text" right after the passage text: a callout with
+  Model, Context and Reasoning for the selected sentence, or a note that
+  no `#!lm` data was recorded for it.
+- Consolidated `import html` into the imports cell (was `import html as
+  _html` in one cell; a second one tripped `marimo check`'s
+  private-import-alias rule).
+
+Verified: `marimo check` clean on both; `app.run()` on both loads 17
+sentences and all 17 match a `#!lm` entry by CONTEXT; ran the
+`lm_info_display` cell directly with the checkbox on, for both a real
+entry and `None`.
+
+## 2026-09-23 (cont.): Moved analysis files to marimo/public/analyses/
+
+At the user's request, moved all 17 `.cex` files and `manifest.json` from
+`marimo/public/` into `marimo/public/analyses/` (with `git mv`, so the
+renames are staged but not committed). The manifest moved with the
+files it lists.
+
+- Both notebooks: the `PUBLIC_DIR` cell is now `ANALYSES_DIR =
+  mo.notebook_location() / "public" / "analyses"`; manifest and file
+  paths, the status line, and the error messages now say
+  `public/analyses/`.
+- `utilities/generate_public_manifest.py`: `PUBLIC_DIR` -> `ANALYSES_DIR`
+  (`.../marimo/public/analyses`); docstring updated.
+- `notes/wasmexport.md`: path in the re-run reminder updated.
+
+Verified: regenerating the manifest from the new location reproduces the
+same 17 names; `marimo check` clean on both; `app.run()` on both loads
+17 files / 17 sentences with no errors or warnings, and all 17 `#!lm` entries;
+`marimo export html-wasm` copies `public/analyses/` (17 `.cex` +
+manifest) into the bundle.

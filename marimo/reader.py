@@ -47,7 +47,7 @@ def _(
     else:
         analysis_status = mo.md(
             f"## Select a sentence\n\n"
-            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/`.*"
+            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/analyses/`.*"
         )
 
     if read_warnings:
@@ -81,6 +81,18 @@ def _(mo):
 @app.cell(hide_code=True)
 def _(plaintext_html):
     plaintext_html
+    return
+
+
+@app.cell(hide_code=True)
+def _(show_lm_info):
+    show_lm_info
+    return
+
+
+@app.cell(hide_code=True)
+def _(lm_info_display):
+    lm_info_display
     return
 
 
@@ -180,13 +192,16 @@ def _(mo):
     # Where arsgrammatica's own review notebook lets the user browse for a
     # single analysis file, this one always reads every one already saved
     # for this project -- see notes/project.md -- so there's no
-    # file_browser widget here at all. `public/` (see is_remote_location()
-    # below) holds a snapshot of this project's `data/` directory, kept in
-    # sync by generate_public_manifest.py -- see that script's own
+    # file_browser widget here at all. `public/analyses/` (see
+    # is_remote_location() below) holds a snapshot of this project's `data/` directory, kept in
+    # sync by utilities/generate_public_manifest.py -- see that script's own
     # docstring for why reading goes through a manifest file rather than
     # a directory listing.
-    PUBLIC_DIR = mo.notebook_location() / "public"
-    return (PUBLIC_DIR,)
+    # `marimo export html-wasm` only copies `public/` itself (with all
+    # its subdirectories) next to the exported notebook, so the
+    # analyses have to live somewhere under it.
+    ANALYSES_DIR = mo.notebook_location() / "public" / "analyses"
+    return (ANALYSES_DIR,)
 
 
 @app.function
@@ -258,15 +273,15 @@ def analysis_sort_key(path):
 
 
 @app.cell
-def _(PUBLIC_DIR, json):
+def _(ANALYSES_DIR, json):
     manifest_error = None
     try:
-        manifest_names = json.loads(read_location_text(PUBLIC_DIR / "manifest.json"))
+        manifest_names = json.loads(read_location_text(ANALYSES_DIR / "manifest.json"))
     except (OSError, ValueError) as e:
         manifest_names = []
         manifest_error = str(e)
 
-    analysis_paths = sorted((PUBLIC_DIR / name for name in manifest_names), key=analysis_sort_key)
+    analysis_paths = sorted((ANALYSES_DIR / name for name in manifest_names), key=analysis_sort_key)
     return analysis_paths, manifest_error
 
 
@@ -299,12 +314,12 @@ def _(analysis_paths, manifest_error, read_analyses):
 
     read_error = None
     if manifest_error is not None:
-        read_error = f"Could not read public/manifest.json: {manifest_error}"
+        read_error = f"Could not read public/analyses/manifest.json: {manifest_error}"
     elif not analysis_paths:
-        read_error = "No analysis files listed in public/manifest.json."
+        read_error = "No analysis files listed in public/analyses/manifest.json."
     elif not sentences:
-        read_error = "Found analysis files in public/manifest.json, but none could be read -- see the warnings below."
-    return read_error, read_warnings, sentences, tokengraph, verbalunits
+        read_error = "Found analysis files in public/analyses/manifest.json, but none could be read -- see the warnings below."
+    return lm_infos, read_error, read_warnings, sentences, tokengraph, verbalunits
 
 
 @app.cell
@@ -322,6 +337,30 @@ def _(sentences, split_analysis_by_sentence, tokengraph, verbalunits):
         except ValueError as e:
             split_error = str(e)
     return sentence_slices, split_error
+
+
+@app.function
+# The sentence-style identifier arsgrammatica writes as each '#!lm'
+# block's CONTEXT= value: "<citation>.<id>-<citation>.<id>" for the
+# sentence's own first and last token (see LMInfo's docstring and
+# _sentence_context_identifier() in arsgrammatica/serialization.py --
+# private there, so re-derived here). None for a sentence with no tokens.
+def sentence_context_id(sentence):
+    if not sentence.tokens:
+        return None
+    first, last = sentence.tokens[0], sentence.tokens[-1]
+    return f"{first.citation}.{first.id}-{last.citation}.{last.id}"
+
+
+@app.cell
+def _(lm_infos):
+    # Every loaded '#!lm' entry, keyed by its own CONTEXT= value, so the
+    # selected sentence's entry is found by what it actually identifies
+    # rather than by position alone (lm_infos is padded with None for
+    # files lacking a '#!lm' block, so position still works as a
+    # fallback -- see selected_lm_info below).
+    lm_by_context = {info.context: info for info in lm_infos if info is not None and info.context}
+    return (lm_by_context,)
 
 
 @app.function
@@ -368,7 +407,7 @@ def _(mo, sentence_slices, sentences, tokengraph_to_text):
 
 
 @app.cell
-def _(sentence_dropdown, sentence_slices, sentences):
+def _(lm_by_context, lm_infos, sentence_dropdown, sentence_slices, sentences):
     # The currently selected sentence's own tokengraph/verbalunits slice --
     # empty until a sentence is actually picked, which every rendering
     # utility below already handles gracefully (an empty diagram/string).
@@ -378,11 +417,17 @@ def _(sentence_dropdown, sentence_slices, sentences):
     selected_tokengraph, selected_verbalunits = [], []
     selected_citation = None
     selected_sentence = None
+    selected_lm_info = None
     if sentence_dropdown.value is not None and 0 <= sentence_dropdown.value < len(sentence_slices):
         selected_tokengraph, selected_verbalunits = sentence_slices[sentence_dropdown.value]
         selected_sentence = sentences[sentence_dropdown.value]
         selected_citation = selected_sentence.tokens[0].citation if selected_sentence.tokens else None
-    return selected_citation, selected_tokengraph
+        # Match on CONTEXT first; fall back to the positionally aligned
+        # entry only if no '#!lm' block names this sentence at all.
+        selected_lm_info = lm_by_context.get(sentence_context_id(selected_sentence))
+        if selected_lm_info is None and sentence_dropdown.value < len(lm_infos):
+            selected_lm_info = lm_infos[sentence_dropdown.value]
+    return selected_citation, selected_lm_info, selected_tokengraph
 
 
 @app.cell(hide_code=True)
@@ -419,6 +464,37 @@ def _(maxdepth):
     # None before a sentence is selected" guard in each of them.
     depth = maxdepth.value if maxdepth is not None else None
     return (depth,)
+
+
+@app.cell
+def _(mo):
+    # Off by default: the model/context/reasoning recorded in each
+    # sentence's '#!lm' block is shown only on request.
+    show_lm_info = mo.ui.checkbox(label="*Show language model details*", value=False)
+    return (show_lm_info,)
+
+
+@app.cell
+def _(html, mo, selected_lm_info, selected_tokengraph, show_lm_info):
+    lm_info_display = mo.md("")
+    if show_lm_info.value and selected_tokengraph:
+        if selected_lm_info is None:
+            lm_info_display = mo.callout(
+                mo.md("No `#!lm` information was recorded for this sentence."), kind="neutral"
+            )
+        else:
+            def _field(value):
+                return html.escape(value) if value else "<i>(not recorded)</i>"
+
+            lm_info_display = mo.callout(
+                mo.Html(
+                    f"<p><b>Model</b>: <code>{_field(selected_lm_info.model)}</code></p>"
+                    f"<p><b>Context</b>: <code>{_field(selected_lm_info.context)}</code></p>"
+                    f"<p><b>Reasoning</b>: {_field(selected_lm_info.reasoning)}</p>"
+                ),
+                kind="info",
+            )
+    return (lm_info_display,)
 
 
 @app.cell
@@ -494,14 +570,12 @@ def _(
 
 
 @app.cell
-def _(mo, selected_tokengraph, tokengraph_to_text):
+def _(html, mo, selected_tokengraph, tokengraph_to_text):
     # Plain, uncolored text -- tokengraph_to_text() never emits HTML, but
     # the underlying surface text is still escaped before going into
     # mo.Html().
-    import html as _html
-
     plaintext_html = mo.Html(
-        "<b><i>Passage text</i></b>: " + _html.escape(tokengraph_to_text(selected_tokengraph))
+        "<b><i>Passage text</i></b>: " + html.escape(tokengraph_to_text(selected_tokengraph))
     )
     return (plaintext_html,)
 
@@ -531,6 +605,7 @@ def _(mo):
 
 @app.cell
 def _():
+    import html
     import json
 
     from arsgrammatica import (
@@ -545,6 +620,7 @@ def _():
     )
 
     return (
+        html,
         json,
         max_subordination_depth,
         read_analyses,
