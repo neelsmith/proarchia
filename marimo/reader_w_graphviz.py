@@ -56,7 +56,7 @@ def _(
     else:
         analysis_status = mo.md(
             f"## Select a sentence\n\n"
-            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `data/`.*"
+            f"*{len(sentences)} sentence(s) loaded from {len(analysis_paths)} file(s) in `public/`.*"
         )
 
     if read_warnings:
@@ -221,13 +221,71 @@ def _(mo):
 
 
 @app.cell
-def _(Path):
+def _(mo):
     # Where arsgrammatica's own review notebook lets the user browse for a
     # single analysis file, this one always reads every one already saved
-    # in this project's own `data/` directory -- see notes/project.md --
-    # so there's no file_browser widget here at all.
-    DATA_DIR = Path(__file__).parent.parent / "data"
-    return (DATA_DIR,)
+    # for this project -- see notes/project.md -- so there's no
+    # file_browser widget here at all. `public/` (see is_remote_location()
+    # below) holds a snapshot of this project's `data/` directory, kept in
+    # sync by generate_public_manifest.py -- see that script's own
+    # docstring for why reading goes through a manifest file rather than
+    # a directory listing.
+    PUBLIC_DIR = mo.notebook_location() / "public"
+    return (PUBLIC_DIR,)
+
+
+@app.function
+# `mo.notebook_location()` resolves correctly in both contexts this
+# notebook runs in: a real local `pathlib.Path` when run natively
+# (`marimo edit`/`marimo run`, or `uv run --sandbox`), and the
+# notebook's own hosted URL -- wrapped in marimo's `URLPath`, a bare
+# `pathlib.PurePosixPath` with none of `Path`'s filesystem methods
+# (`.open()`/`.is_dir()`/`.glob()` all raise `AttributeError` on it) --
+# when exported with `marimo export html-wasm` and loaded in a browser.
+# `str(p)` contains "://" only in that second case (`URLPath.__str__` is
+# written specifically to preserve it), so that's the one reliable,
+# public-API-only way to tell which kind we were handed.
+def is_remote_location(path):
+    return "://" in str(path)
+
+
+@app.function
+# Read the text content at `path`, whether it's a real local path (plain
+# `open()`) or a URL under Pyodide. `urllib.request` is what
+# `pd.read_csv(str(mo.notebook_location() / "public" / "data.csv"))`
+# relies on in marimo's own docs for `notebook_location()` -- Pyodide
+# transparently proxies it through the browser's own `fetch()` for
+# same-origin requests, so this works unmodified in the browser too.
+def read_location_text(path):
+    if is_remote_location(path):
+        import urllib.request
+
+        with urllib.request.urlopen(str(path)) as response:
+            return response.read().decode("utf-8")
+    else:
+        return path.read_text(encoding="utf-8")
+
+
+@app.function
+# arsgrammatica's read_analyses() only ever does a plain local
+# `open(path)` -- it has no idea about URLs -- so under Pyodide we can't
+# just hand it `path` directly. Fetch the content ourselves instead and
+# stash it in a real local tempfile (Pyodide's virtual filesystem
+# supports normal reads/writes under /tmp, so this works unmodified in
+# the browser too), then hand read_analyses() that tempfile's path.
+# Locally this is a no-op passthrough -- read_analyses() already gets a
+# real local path there.
+def resolve_readable_path(path):
+    if not is_remote_location(path):
+        return str(path)
+
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(
+        mode="w", suffix=".cex", delete=False, encoding="utf-8"
+    ) as tmp:
+        tmp.write(read_location_text(path))
+        return tmp.name
 
 
 @app.function
@@ -245,13 +303,20 @@ def analysis_sort_key(path):
 
 
 @app.cell
-def _(DATA_DIR):
-    analysis_paths = sorted(DATA_DIR.glob("*.cex"), key=analysis_sort_key) if DATA_DIR.is_dir() else []
-    return (analysis_paths,)
+def _(PUBLIC_DIR, json):
+    manifest_error = None
+    try:
+        manifest_names = json.loads(read_location_text(PUBLIC_DIR / "manifest.json"))
+    except (OSError, ValueError) as e:
+        manifest_names = []
+        manifest_error = str(e)
+
+    analysis_paths = sorted((PUBLIC_DIR / name for name in manifest_names), key=analysis_sort_key)
+    return analysis_paths, manifest_error
 
 
 @app.cell
-def _(analysis_paths, read_analyses):
+def _(analysis_paths, manifest_error, read_analyses):
     # Read every file and concatenate their (tokengraph, verbalunits,
     # sentences, lm_infos) in file order -- token ids are unique per
     # sentence's own citation context, so concatenating rather than
@@ -264,7 +329,7 @@ def _(analysis_paths, read_analyses):
     read_warnings = []
     for _path in analysis_paths:
         try:
-            _tokengraph, _verbalunits, _sentences, _lm_infos = read_analyses(str(_path))
+            _tokengraph, _verbalunits, _sentences, _lm_infos = read_analyses(resolve_readable_path(_path))
         except (ValueError, OSError) as e:
             read_warnings.append(f"{_path.name}: {e}")
             continue
@@ -278,10 +343,12 @@ def _(analysis_paths, read_analyses):
         lm_infos.extend(_lm_infos if _lm_infos else [None] * len(_sentences))
 
     read_error = None
-    if not analysis_paths:
-        read_error = "No analysis files (*.cex) found in data/."
+    if manifest_error is not None:
+        read_error = f"Could not read public/manifest.json: {manifest_error}"
+    elif not analysis_paths:
+        read_error = "No analysis files listed in public/manifest.json."
     elif not sentences:
-        read_error = "Found analysis files in data/, but none could be read -- see the warnings below."
+        read_error = "Found analysis files in public/manifest.json, but none could be read -- see the warnings below."
     return read_error, read_warnings, sentences, tokengraph, verbalunits
 
 
@@ -562,7 +629,7 @@ def _(mo):
 
 @app.cell
 def _():
-    from pathlib import Path
+    import json
 
     from arsgrammatica import (
         max_subordination_depth,
@@ -590,7 +657,7 @@ def _():
         graphviz = None
         graphviz_available = False
     return (
-        Path,
+        json,
         graphviz,
         graphviz_available,
         max_subordination_depth,

@@ -378,3 +378,104 @@ from package resolution, and still accurate (the `graphviz` PyPI package
 itself is pure Python, only the separate `dot` binary is native, and it
 just isn't reachable from Pyodide -- the notebook already degrades to
 reporting that rather than failing).
+
+## 2026-09-23 (cont.): Read from marimo/public/ via mo.notebook_location()
+
+User put a copy of the `data/` analysis files in `marimo/public/` and
+asked both notebooks to read from there via `mo.notebook_location()`,
+continuing the WASM-export prep.
+
+Checked `mo.notebook_location()`'s actual implementation (marimo 0.24.2)
+before writing anything against it: in native execution it's just
+`notebook_dir()` (a real local `pathlib.Path`); under Pyodide it returns
+`URLPath` -- a bare `pathlib.PurePosixPath` subclass with no filesystem
+methods at all (`.open()`/`.is_dir()`/`.glob()` all raise
+`AttributeError`), representing the notebook's own hosted URL. Also
+checked marimo's server code (`assets.py`) and its `html-wasm` export
+path (`Exporter().export_public_folder()`): the exported bundle serves
+each `public/` file by its own exact name as a static file -- there is
+no directory-listing endpoint, in dev mode or in the exported static
+bundle. So the existing `DATA_DIR.glob("*.cex")` approach cannot carry
+over as-is: the *path construction* needed to switch to
+`mo.notebook_location() / "public"`, but file *discovery* needed a
+different mechanism entirely, since nothing can list a `public/`
+directory's contents over plain HTTP once it's exported.
+
+Also checked arsgrammatica's `read_analyses()` (0.11.2) directly: it
+does a plain local `open(path, ...)` -- no URL awareness -- so under
+Pyodide it can't be handed a URLPath directly either.
+
+Solution, implemented identically in both `reader.py` and
+`reader_w_graphviz.py`:
+
+- New `marimo/generate_public_manifest.py` (standalone script, not part
+  of the interactive notebook -- keeps the notebooks themselves free of
+  filesystem writes, matching their existing read-only design) scans
+  `public/*.cex` and writes `public/manifest.json`, a plain sorted JSON
+  array of filenames. Ran it now to produce the initial manifest (17
+  entries, matching `data/`). Re-run it whenever `public/`'s `.cex`
+  files change, before the next `marimo export html-wasm`.
+- Three new `@app.function` helpers, in both notebooks:
+  `is_remote_location(path)` (checks for `"://" ` in `str(path)` --
+  `URLPath.__str__` is written specifically to preserve it, so this is
+  the one reliable, public-API-only way to tell a URLPath from a real
+  Path); `read_location_text(path)` (local `.read_text()` or
+  `urllib.request.urlopen(str(path))` depending); and
+  `resolve_readable_path(path)` (passthrough locally, or -- under
+  Pyodide -- fetches the content and writes it to a local tempfile,
+  since `read_analyses()` needs an actually-openable local path either
+  way).
+- `DATA_DIR = Path(__file__).parent.parent / "data"` became
+  `PUBLIC_DIR = mo.notebook_location() / "public"`.
+- File discovery changed from `DATA_DIR.glob("*.cex")` to reading
+  `public/manifest.json` (via `read_location_text` + `json.loads`) and
+  building `analysis_paths` from its filename list -- still re-sorted
+  through the existing `analysis_sort_key()` afterward, so citation
+  ordering is unaffected. A manifest read/parse failure now surfaces
+  through the same `read_error` display path the old "no files found"/
+  "files found but unreadable" cases already used.
+- The per-file read loop now calls `read_analyses(resolve_readable_path(_path))`
+  instead of `read_analyses(str(_path))`.
+- Updated the status line's "`data/`" wording to "`public/`", and the
+  two `read_error` message strings to name `public/manifest.json`
+  instead of `data/`.
+- Imports cell: dropped `from pathlib import Path` (no longer used
+  anywhere outside comments) and added `import json`.
+
+An intentional design choice worth calling out: both notebooks now
+resolve their file list through the manifest in *every* context, not
+just under Pyodide -- so what a local `marimo edit`/`marimo run` shows
+is exactly what the exported bundle will show, with no risk of a file
+freshly added to `public/` working locally (old glob-based discovery)
+but silently missing from the export because the manifest wasn't
+regenerated yet.
+
+Verified, not just asserted:
+
+- `marimo check` on both notebooks: no errors.
+- `from reader import app; app.run()` (marimo's own documented way to
+  execute a notebook programmatically) against the real `public/`
+  directory: 17/17 files found via the manifest, 17 sentences loaded,
+  no errors or warnings. Same for `reader_w_graphviz.py`.
+- Started a real local HTTP server over `public/`
+  (`python3 -m http.server`) and exercised `is_remote_location`,
+  `read_location_text`, `resolve_readable_path`, and
+  `analysis_sort_key` directly against a real `marimo._runtime.runtime.URLPath`
+  pointed at `http://127.0.0.1:8934` -- i.e. the exact code path Pyodide
+  will take, not just the native one. Full round trip (manifest fetch,
+  per-file fetch-to-tempfile, `read_analyses()` on the tempfile)
+  succeeded: 17/17 files, 17 sentences, entirely over HTTP.
+- Ran `marimo export html-wasm marimo/reader.py --mode run --execute -f`
+  end to end again: the exported bundle's `public/` directory contains
+  all 17 `.cex` files plus `manifest.json`, copied verbatim alongside
+  `index.html` (confirms `Exporter().export_public_folder()` picked up
+  the new files correctly).
+
+Not independently verified: an actual Pyodide/browser load of the
+exported bundle (the Pyodide lockfile fetch still fails from this
+network, same limitation noted in the previous WASM investigations) --
+the HTTP-server test above exercises the same `urllib.request` call
+Pyodide is documented to transparently proxy through the browser's
+`fetch()` for same-origin requests, but that proxying itself is the one
+piece that can only be confirmed by actually opening the exported page
+in a browser.

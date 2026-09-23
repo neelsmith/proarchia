@@ -2,3 +2,4 @@ quarto/quarto-build/
 .DS_Store
 marimo/__pycache__/
 marimo/__marimo__/
+scratch/
