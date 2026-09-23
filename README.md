@@ -5,7 +5,8 @@ Resources for reading Cicero, *Pro Archia*.
 In development:
 
 - marimo notebooks
-- a web site with embedded marimo notebooks for interactive functionality
+- a [web site](https://neelsmith.github.io/proarchia/) with embedded marimo notebooks for interactive functionality
+
 
 
 Coverage:
