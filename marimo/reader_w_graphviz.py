@@ -2,15 +2,9 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "arsgrammatica",
+#     "arsgrammatica>=0.11.2",
 #     "graphviz",
 # ]
-#
-# [tool.uv.sources]
-# # arsgrammatica isn't published on PyPI -- point uv at the GitHub repo
-# # directly (see https://github.com/neelsmith/arsgrammatica), or `uv run
-# # --sandbox`/`marimo edit --sandbox` fails to resolve it.
-# arsgrammatica = { git = "https://github.com/neelsmith/arsgrammatica.git" }
 #
 # # This is reader.py plus the option of viewing a sentence's syntax graph
 # # as a Graphviz digraph. The `graphviz` dependency above is the thin

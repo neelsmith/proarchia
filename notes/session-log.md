@@ -266,3 +266,115 @@ errors, no leftover warnings.
 This is a workaround living in this repo's own notebook, not a fix to
 arsgrammatica itself (not this project's package to change) -- worth
 reporting upstream at some point, but out of scope here.
+
+## 2026-09-23: WASM-export dependency check — arsgrammatica not yet live on PyPI
+
+User asked to switch `reader.py`/`reader_w_graphviz.py` off the
+`[tool.uv.sources]` git pointer for `arsgrammatica` and onto plain PyPI
+dependencies for both `arsgrammatica` and `aatgraph` (the renamed `aat`
+package), specifically to unblock `marimo export html-wasm`.
+
+Checked both packages against PyPI's JSON API (`https://pypi.org/pypi/
+<name>/json`) rather than assuming:
+
+- `aatgraph` **is** live: 0.3.0, pure-Python wheel
+  (`aatgraph-0.3.0-py3-none-any.whl`), and its own `dspy` dependency is
+  now an optional extra (`dspy>=3.0; extra == "english"` /
+  `"dev"`), not unconditional. Moot for now, though -- neither notebook
+  currently imports `aat`/`aatgraph` at all (it was removed from
+  `reader.py` earlier this project, per the user's own request, and
+  never existed in `reader_w_graphviz.py`); this only matters if an AAT
+  view comes back.
+- `arsgrammatica` is **not** live under that name: `pypi.org/pypi/
+  arsgrammatica/json` returns a clean 404 (checked repeatedly, not a
+  transient blip), and `pip index versions arsgrammatica` / `pip
+  download arsgrammatica` both fail the same way run directly on this
+  machine. Checked GitHub for context: `pyproject.toml` on `main` is at
+  0.11.1, and `releases.md`'s 0.11.1 entry (dated today) reads
+  "Corrects configuration of pypi.org" -- and the repo's
+  `publish.yml` only pushes to the real index on a GitHub Release
+  publish event (a tag push alone only reaches TestPyPI), gated on PyPI
+  Trusted Publishing (OIDC) being registered correctly on pypi.org's own
+  side for this exact repo/workflow/environment. Reads like the publish
+  is mid-setup rather than finished.
+
+Good news found along the way: `main`'s `pyproject.toml` shows
+`arsgrammatica`'s own maintainer has already done almost exactly the
+fix I'd floated last session for the DSPy-dependency WASM blocker --
+base package dependencies are now just `pydantic` and `networkx`; `dspy`
+moved to an optional `llm` extra; and `__init__.py`'s imports of
+`latin_syntax_dspy.py`/`segmentation_dspy.py`/`pipeline.py` are lazy-
+stub guarded the same way `aat_bridge.py` already was, per the extra's
+own inline comment (which cites this exact WASM use case and this
+project's earlier `latin_syntaxer_review.py` by name). Once this is
+actually live on PyPI, the `litellm`/`tokenizers`/`fastuuid` blockers
+identified in the previous WASM investigation should disappear from
+`reader.py`'s dependency chain entirely.
+
+**Not yet changed**: left both notebooks' PEP 723 headers pointing at
+the GitHub `[tool.uv.sources]` override, since switching to a PyPI
+dependency that doesn't resolve would break `uv run --sandbox` outright.
+Told the user to confirm the PyPI publish succeeded (or fix the
+Trusted Publisher config) before I make the switch.
+
+## 2026-09-23 (cont.): Switched both notebooks to PyPI `arsgrammatica`
+
+Re-checked PyPI now that the user confirmed the publish went through:
+`pypi.org/pypi/arsgrammatica/json` now returns 0.11.2, a pure-Python
+wheel (`arsgrammatica-0.11.2-py3-none-any.whl`), with `requires_dist`
+showing base deps of just `pydantic>=2.0` and `networkx>=3.0` -- `dspy`
+is an `llm` extra, and `aatgraph` (the renamed `aat` package, also
+confirmed live on PyPI at 0.3.0) is now its own `aat` extra, so the old
+`aat @ git+...` direct-URL dependency is gone from arsgrammatica's own
+metadata too. Confirmed the same from this machine directly (`pip index
+versions arsgrammatica` -> 0.11.2).
+
+Updated the PEP 723 header in both `marimo/reader.py` and
+`marimo/reader_w_graphviz.py`: dropped the `[tool.uv.sources]` git
+override entirely and changed the dependency to `"arsgrammatica>=0.11.2"`
+(plain PyPI). Edited in place on this machine with a fresh read +
+single-match `count(old) == 1` assertion first, per the established
+safe-edit convention, so nothing else in either file was touched.
+
+Verified, not just asserted:
+
+- `uv export --script` on both notebooks resolves cleanly (37 packages
+  for `reader.py`, 38 for `reader_w_graphviz.py` with `graphviz` added)
+  with zero occurrences of `dspy`, `litellm`, `tokenizers`, `fastuuid`,
+  `boto3`, or `botocore` anywhere in the tree -- the entire blocker
+  identified in the previous WASM investigation is gone, not just
+  hidden behind an extra.
+- Every native-only package still in the resolved set (`pyzmq`,
+  `psutil`, `starlette`, `uvicorn`, `websockets`, `loro`) already carries
+  marimo's own `sys_platform != 'emscripten'` marker, so Pyodide skips
+  them automatically; the rest (`pydantic`, `pydantic-core`, `networkx`,
+  `msgspec`, and the small doc/markdown/parso/jedi-type tooling marimo
+  itself needs) were already confirmed in the prior investigation to
+  have Pyodide-provided wheels.
+- Installed the resolved set into a fresh isolated venv and imported
+  `arsgrammatica`'s rendering functions directly: `dspy`/`litellm` never
+  appear in `sys.modules` afterward.
+- Ran `marimo export html-wasm marimo/reader.py --mode run --execute -f`
+  end to end (succeeds); the exported `index.html`'s embedded
+  `notebookCode` shows the PEP 723 header baked in as
+  `dependencies = ["marimo==0.24.2", "arsgrammatica==0.11.2"]` -- i.e.
+  the artifact marimo actually built for the browser is resolved purely
+  from PyPI, no git source, no dspy chain. (Note: `--execute`'s own
+  preview still runs under native CPython here, not real Pyodide --
+  the Pyodide lockfile fetch fails from this network the same as last
+  time -- so this checks the resolved dependency set and that the
+  export step itself succeeds, not that Pyodide can install every wheel
+  in a real browser. Given every remaining package's wheel status was
+  independently confirmed via PyPI/Pyodide metadata, that residual gap
+  is small, but a real in-browser load is the only fully conclusive
+  test.)
+- `uv run --isolated ... -- python3 -m marimo export script` on both
+  notebooks also completed cleanly against the newly-resolved PyPI-only
+  dependency sets, using this repo's real `data/` files.
+
+Left `reader_w_graphviz.py`'s own explanatory comment about needing the
+system `dot` executable as-is -- that's a runtime/PATH concern, separate
+from package resolution, and still accurate (the `graphviz` PyPI package
+itself is pure Python, only the separate `dot` binary is native, and it
+just isn't reachable from Pyodide -- the notebook already degrades to
+reporting that rather than failing).

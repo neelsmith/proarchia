@@ -2,14 +2,8 @@
 # requires-python = ">=3.10"
 # dependencies = [
 #     "marimo",
-#     "arsgrammatica",
+#     "arsgrammatica>=0.11.2",
 # ]
-#
-# [tool.uv.sources]
-# # arsgrammatica isn't published on PyPI -- point uv at the GitHub repo
-# # directly (see https://github.com/neelsmith/arsgrammatica), or `uv run
-# # --sandbox`/`marimo edit --sandbox` fails to resolve it.
-# arsgrammatica = { git = "https://github.com/neelsmith/arsgrammatica.git" }
 # ///
 
 import marimo
