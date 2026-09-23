@@ -1,0 +1,63 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:4.4.t0-urn:cts:latinLit:phi0474.phi016.omar:4.4.t38
+REASONING=Structure: "quod si ... sentiam" is the protasis (dependent, introduced by *si*, with *sentiam* as its verb); "perficiam" is the single independent verb; "profecto" modifies it; "ut ... putetis" is the result/substantive clause dependent on *perficiam*; inside it *putetis* governs two indirect statements about "hunc A. Licinium": (a) "non modo non segregandum [esse] ... a numero civium", and (b) "verum etiam ... asciscendum fuisse". Infinitives: *tribui* and *concedi* are passive infinitives in indirect statement under *sentiam*, joined by the enclitic *-que* (which therefore links the two infinitives, not the surrounding nouns). Gerundives: per the stated convention, *segregandum* and *asciscendum* are adjectives (adjectival to *Licinium*), so the form of *sum* carries the verbal expression. With *asciscendum* the real infinitive *fuisse* anchors it; with *segregandum* the infinitive *esse* is elided, so I add an implied-sum token (4.t19_implied) immediately after *segregandum*, anchoring an indirect-statement/linking-verb expression, with *Licinium* as its subject (and, secondarily, as subject of *fuisse* too). Subordinate clauses inside the indirect statements: "cum sit civis" is concessive/causal attached to the *segregandum [esse]* statement (so *cum* points at the implied *esse*); "si non esset" is the protasis belonging to the *asciscendum fuisse* statement (so *si* points at *fuisse*). *esset* is taken as a linking verb with an elided predicate ("if he were not [a citizen]"), though an existential/intransitive reading ("if he did not exist") is defensible — I chose the linking reading because the contrast is with *civis* in the preceding *cum*-clause. Ambiguity flagged: **quod** (4.t0). Two defensible readings — (i) the formulaic connective *quod si* = "but if", where *quod* is an accusative of respect loosely attached to the main statement, and (ii) *quod* as the accusative subject of the passive infinitives *tribui concedique* ("if I feel that this is granted and conceded to me"). I chose (i), relating *quod* to *perficiam* as 'accusative', because *quod si* is a fixed idiom in Cicero; under (ii) *quod* would instead be 'subject' of *tribui*. "non modo ... verum etiam": *verum* is taken as the coordinating conjunction linking the two predications (implied *esse* and *fuisse*); *modo* is adverbial to the implied *esse*, negated by the first *non*, and the second *non* negates *segregandum*.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t0|urn:cts:latinLit:phi0474.phi016.omar:4|4.t38
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t5|indirect statement|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t6|indirect statement|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t8|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t10|independent|transitive active
+|4.t19_implied|indirect statement|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t22|dependent|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t33|dependent|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t35|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t37|indirect statement|linking verb
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t0|lexical|quod|qui||4.t10|accusative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t1|lexical|si|si||4.t10|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t2|lexical|mihi|ego||4.t5|dative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t3|lexical|a|a||4.t5|agent||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t4|lexical|vobis|tu||4.t3|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t5|lexical|tribui|tribuo|4.t5|4.t8|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t6|lexical|concedi|concedo|4.t6|4.t8|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t7|enclitic|que|que||4.t5|coordinating conjunction|4.t6|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t8|lexical|sentiam|sentio|4.t8|4.t1|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t9|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t10|lexical|perficiam|perficio|4.t10|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t11|lexical|profecto|profecto||4.t10|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t12|lexical|ut|ut||4.t10|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t13|lexical|hunc|hic||4.t15|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t14|praenomen|A.|Aulus||4.t15|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t15|lexical|Licinium|Licinius||4.t19_implied|subject|4.t37|subject
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t16|lexical|non|non||4.t17|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t17|lexical|modo|modo||4.t19_implied|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t18|lexical|non|non||4.t19|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t19|lexical|segregandum|segrego||4.t15|adjectival||
+|4.t19_implied|implied sum||sum|4.t19_implied|4.t35|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t20|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t21|lexical|cum|cum||4.t19_implied|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t22|lexical|sit|sum|4.t22|4.t21|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t23|lexical|civis|civis||4.t22|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t24|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t25|lexical|a|a||4.t19|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t26|lexical|numero|numerus||4.t25|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t27|lexical|civium|civis||4.t26|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t28|lexical|verum|verum||4.t19_implied|coordinating conjunction|4.t37|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t29|lexical|etiam|etiam||4.t37|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t30|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t31|lexical|si|si||4.t37|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t32|lexical|non|non||4.t33|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t33|lexical|esset|sum|4.t33|4.t31|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t34|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t35|lexical|putetis|puto|4.t35|4.t12|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t36|lexical|asciscendum|ascisco||4.t15|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t37|lexical|fuisse|sum|4.t37|4.t35|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t38|punctuation|.||||||

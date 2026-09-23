@@ -1,0 +1,43 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:6.6.t71-urn:cts:latinLit:phi0474.phi016.omar:6.6.t96
+REASONING=The main clause is "interim satis longo intervallo ... venit Heracleam": *venit* is the independent verb (intransitive), with *interim* as an adverb, *intervallo* as an ablative of time (with *longo* adjectival and *satis* an adverb modifying *longo*), and *Heracleam* as a bare accusative of place to which (relation 'accusative' into *venit*). Two coordinated *cum*-clauses precede it, joined by *et* (t84), which therefore links the two dependent verbal expressions (t83 *profectus* and t92 *decederet*), not neighbouring nouns. First *cum*-clause (t76): "cum esset cum M. Lucullo in Siciliam profectus" — *profectus ... esset* is the pluperfect subjunctive of the deponent *proficiscor*, i.e. a compound form of participle + *sum*; per the convention, the participle *profectus* anchors the verbal expression ('dependent', intransitive, 'unit verb' -> the conjunction t76) and *esset* relates to it as 'auxiliary'. The prepositional phrases *cum M. Lucullo* (t78) and *in Siciliam* (t81) are adverbial to *profectus*; *M.* is a praenomen relating to *Lucullo*. Second *cum*-clause (t85): *decederet* is dependent/intransitive, 'unit verb' -> t85; *ex ea provincia* and *cum eodem Lucullo* are adverbial prepositional phrases into *decederet*. Note on t76/t85: both temporal/causal *cum* conjunctions are taken as subordinate to the main verb *venit*; the second *cum* could conceivably be read as coordinate with the first via *et* alone (with *et* joining clauses and *cum* repeated), but either way both dependent verbs attach to *venit* through their own conjunction, which is what I have annotated.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t71|urn:cts:latinLit:phi0474.phi016.omar:6|6.t96
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t83|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t92|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t94|independent|intransitive
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t71|lexical|interim|interim||6.t94|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t72|lexical|satis|satis||6.t73|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t73|lexical|longo|longus||6.t74|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t74|lexical|intervallo|intervallum||6.t94|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t75|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t76|lexical|cum|cum||6.t94|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t77|lexical|esset|sum||6.t83|auxiliary||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t78|lexical|cum|cum||6.t83|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t79|praenomen|M.|Marcus||6.t80|praenomen||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t80|lexical|Lucullo|Lucullus||6.t78|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t81|lexical|in|in||6.t83|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t82|lexical|Siciliam|Sicilia||6.t81|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t83|lexical|profectus|proficiscor|6.t83|6.t76|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t84|lexical|et|et||6.t83|coordinating conjunction|6.t92|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t85|lexical|cum|cum||6.t94|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t86|lexical|ex|ex||6.t92|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t87|lexical|ea|is||6.t88|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t88|lexical|provincia|provincia||6.t86|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t89|lexical|cum|cum||6.t92|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t90|lexical|eodem|idem||6.t91|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t91|lexical|Lucullo|Lucullus||6.t89|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t92|lexical|decederet|decedo|6.t92|6.t85|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t93|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t94|lexical|venit|venio|6.t94|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t95|lexical|Heracleam|Heraclea||6.t94|accusative||
+urn:cts:latinLit:phi0474.phi016.omar:6|6.t96|punctuation|.||||||

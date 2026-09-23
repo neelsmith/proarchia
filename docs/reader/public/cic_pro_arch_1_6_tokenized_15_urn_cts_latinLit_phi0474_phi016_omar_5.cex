@@ -1,0 +1,45 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:5.5.t120-urn:cts:latinLit:phi0474.phi016.omar:5.5.t147
+REASONING=Main clause: **dedit** (independent, transitive active). Its subject is **lumen** ("this brilliance not only of intellect and letters but also of character and virtue gave this too..."), with **hoc** as the direct object anticipating the following *ut*-clause; the four genitives (ingeni, litterarum, naturae, virtutis) all depend on *lumen*, paired by **ac** and **atque**, and the two pairs are joined by the correlative **non solum ... verum etiam**, with *verum* taken as the coordinating conjunction linking *litterarum* (the immediately preceding item) to *naturae* (the following one). Ambiguity flagged: *hoc lumen* could alternatively be read together as the accusative object of *dedit* (with an unexpressed personal subject, "he gave this brilliance..."); I chose *lumen* as subject and *hoc* as the object anticipating the *ut*-clause, because *hoc ... ut* is Cicero's normal anticipatory idiom and the correlative *non solum ... verum etiam* brackets only the genitives, leaving *lumen* a single nominative head. Also a close call: *etiam* (t130) and *solum* (t124) are treated as adverbs modifying the main verb *dedit* (with *non* modifying *solum*), since no other target is licensed by the relation set. Result clause: **ut** subordinates to *dedit*; **esset** (dependent, linking verb) has *ut* as its unit-verb anchor, **domus** as subject (with **eadem** adjectival to it), **familiarissima** as predicate, and **senectuti** as a dative related to the verb. Relative clause: **quae** relates to its antecedent *domus* (relative pronoun) and is also subject of **favit** (dependent, intransitive, since *faveo* takes the dative); **adulescentiae** is its dative, **huius** a genitive depending on *adulescentiae*, and **prima** an adjective agreeing with *quae*.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t120|urn:cts:latinLit:phi0474.phi016.omar:5|5.t147
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t120|independent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t141|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t144|dependent|linking verb
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t120|lexical|dedit|do|5.t120|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t121|lexical|etiam|etiam||5.t120|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t122|lexical|hoc|hic||5.t120|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t123|lexical|non|non||5.t124|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t124|lexical|solum|solum||5.t120|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t125|lexical|lumen|lumen||5.t120|subject||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t126|lexical|ingeni|ingenium||5.t125|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t127|lexical|ac|ac||5.t126|coordinating conjunction|5.t128|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t128|lexical|litterarum|littera||5.t125|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t129|lexical|verum|verum||5.t128|coordinating conjunction|5.t131|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t130|lexical|etiam|etiam||5.t120|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t131|lexical|naturae|natura||5.t125|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t132|lexical|atque|atque||5.t131|coordinating conjunction|5.t133|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t133|lexical|virtutis|virtus||5.t125|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t134|lexical|ut|ut||5.t120|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t135|lexical|domus|domus||5.t144|subject||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t136|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t137|lexical|quae|qui||5.t135|relative pronoun|5.t141|subject
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t138|lexical|huius|hic||5.t139|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t139|lexical|adulescentiae|adulescentia||5.t141|dative||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t140|lexical|prima|primus||5.t137|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t141|lexical|favit|faveo|5.t141|5.t137|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t142|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t143|lexical|eadem|idem||5.t135|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t144|lexical|esset|sum|5.t144|5.t134|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t145|lexical|familiarissima|familiaris||5.t144|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t146|lexical|senectuti|senectus||5.t144|dative||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t147|punctuation|.||||||

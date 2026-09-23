@@ -1,0 +1,35 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:5.5.t64-urn:cts:latinLit:phi0474.phi016.omar:5.5.t80
+REASONING=The sentence has a preposed *cum*-clause and a main clause with an ablative absolute. - "hac tanta celebritate famae": ablative of cause, taken with the *cum*-clause verb **esset** ("since by this great celebrity of his fame he was already known"). One could attach it to **venit** instead, but its position before *cum* within the subordinate unit and its sense with *notus esset* favor **esset**; flagging this as a judgment call. *hac* and *tanta* are adjectival with *celebritate*, *famae* a genitive dependent on *celebritate*. - **cum** is a subordinating conjunction pointing to the main verb **venit**; **esset** has 'unit verb' -> *cum*. I read **notus** as a predicate adjective with **esset** as a linking verb (so *notus* = 'predicate'), rather than as the participle of a compound pluperfect passive of *nosco* with *esset* as auxiliary. Both readings are defensible ("he had become known" vs. "he was known"); the adjectival/stative sense of *notus* with a dative (*absentibus*) is the more natural, so I chose the linking-verb analysis. **absentibus** is a substantivized participle in the dative with *notus* ('to those absent'), so it takes 'dative' -> *notus*, not a verbal expression of its own. **iam** is adverbial with *esset*. - Main clause: **venit** independent, intransitive; **Romam** bare accusative of place to which -> *venit*. - "Mario consule et Catulo" is an ablative absolute built on the non-existent present participle of *sum*, so an 'implied sum' token is added (dependent / linking verb), related to *Mario* via 'circumstantial participle'. *Mario* and *Catulo* (the two subjects) take 'ablative absolute' -> *venit*; *consule* is the predicate of the implied *sum*; **et** coordinates *Mario* and *Catulo*.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t64|urn:cts:latinLit:phi0474.phi016.omar:5|5.t80
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t69|dependent|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t75|independent|intransitive
+|5.t79_implied|dependent|linking verb
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t64|lexical|hac|hic||5.t66|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t65|lexical|tanta|tantus||5.t66|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t66|lexical|celebritate|celebritas||5.t69|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t67|lexical|famae|fama||5.t66|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t68|lexical|cum|cum||5.t75|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t69|lexical|esset|sum|5.t69|5.t68|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t70|lexical|iam|iam||5.t69|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t71|lexical|absentibus|absum||5.t72|dative||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t72|lexical|notus|notus||5.t69|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t73|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t74|lexical|Romam|Roma||5.t75|accusative||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t75|lexical|venit|venio|5.t75|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t76|lexical|Mario|Marius||5.t75|ablative absolute||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t77|lexical|consule|consul||5.t79_implied|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t78|lexical|et|et||5.t76|coordinating conjunction|5.t79|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t79|lexical|Catulo|Catulus||5.t75|ablative absolute||
+|5.t79_implied|implied sum||sum|5.t79_implied|5.t76|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t80|punctuation|.||||||

@@ -2,9 +2,26 @@
 title: "Cicero, *Pro Archia*"
 ---
 
-*Project currently in planning stages only.*
+
 
 This web site is planned to include a readable text of Cicero's *Pro Archia* with a variety of visualizations presenting syntactic analysis of the text.
+
+## How it works
+
+
+
+## Experiment
+
+Here's a [first experiment](./reader/) to test some of the planned functionality. 
+
+::: {.callout-caution}
+## Limitations
+
+The experimental app analyzes only a selection from the *Pro Archia*, using a beta version of `arsgrammatica`. The analyses have not been verified and include errors.
+
+:::
+
+
 
 
 

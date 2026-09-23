@@ -1,0 +1,166 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:3.3.t0-urn:cts:latinLit:phi0474.phi016.omar:3.3.t139
+REASONING=**Overall architecture.** The main (independent) verb is *quaeso* (t55), introduced by *sed* (sentence-initial coordinating conjunction, one-sided link to t55). Everything else is subordinate: - *ne ... videatur* (t1/t6): negative purpose clause dependent on *quaeso*. - Inside it, *mirum esse videatur* with the accusative-and-infinitive *me ... uti hoc genere dicendi*. I analyze *esse* (t5) as a complementary infinitive of *videatur* ("seem to be"), with *mirum* (t4) as its predicate, and *uti* (t39) as the accusative-and-infinitive reported after the verb of seeming, i.e. an 'indirect statement' infinitive governed by *videatur*, with *me* (t8) as its accusative subject and *genere* as its ablative. **Ambiguity flagged:** one could instead make *esse* the indirect-statement infinitive (videor + inf. personal construction) and *uti* merely a substantival infinitive serving as subject of *mirum esse*. I chose the reading above because it keeps the accusative subject *me* attached to a genuine verbal expression (*uti*) and treats *videatur ... esse* as the ordinary prolative "seem to be". - *cum res agatur ...* (t17/t19): **ambiguity flagged** — this temporal/circumstantial clause could attach either to *videatur* or to the infinitive *uti*. I attach *cum* to *uti* (t39), since it describes the circumstances of the speaker's using this style, not of the seeming. - *quod ... abhorreat* (t42/t53): relative clause with antecedent *genere* (t40); *quod* is also subject of *abhorreat*. *non modo ... verum etiam* : *verum* treated as the coordinator linking the two *a*-phrases (t45, t50), the other particles as adverbials on *abhorreat*. - *ut ... detis* (t58/t63): substantive clause after *quaeso*. - *quem ad modum spero* (t75): a parenthetical "as I hope" interrupting the syntax of the *detis* clause — classified 'aside', related to *detis*. *quem* is the relative adjective modifying *modum*. - *accommodatam* (t66): **ambiguity flagged** — it could be read as a purely attributive adjective with *veniam* ("an indulgence suited to..."), but per the preference for the circumstantial reading when uncertain, I treat it as a predicate participle agreeing with *veniam*, anchoring its own verbal expression (transitive passive), with *reo* as its dative. The parallel *non molestam* is a plain adjective (t78) with *vobis* as its dative. - *ut ... patiamini* (t80/t104): the epexegetic clause spelling out *hanc veniam*, dependent on *detis*. *me* (t81) is direct object of *patiamini*; *loqui* (t111) and *uti* (t131) are complementary infinitives completing *patiamini*, coordinated by *et* (t114, linking the two infinitives, not the adjacent nouns). - *dicentem* (t88) is a circumstantial participle agreeing with *me* (t81), intransitive here ("speaking on behalf of..."). - The attendant-circumstance ablatives *hoc concursu hominum litteratissimorum*, *hac vestra humanitate* are related as 'ablative' to *patiamini*; *hoc ... praetore exercente iudicium* is a true ablative absolute (*praetore* → *patiamini* as 'ablative absolute', *exercente* → *praetore* as circumstantial participle, *iudicium* its object). **Ambiguity flagged:** these ablatives could alternatively be hung on *dicentem*; I attached them to the governing finite verb of their clause. - *quae ... tractata est* (t119/t129): relative clause with antecedent *persona*; *tractata* anchors the compound passive, *est* is its auxiliary; *que* (t128) coordinates *iudiciis* and *periculis*, both governed by *in* (t125). - Gerunds *dicendi* (t41, t138) are genitives depending on *genere*; *paulo* (t110) is an ablative of degree of difference with the comparative adverb *liberius*. No implied/elided tokens are needed in this passage.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t0|urn:cts:latinLit:phi0474.phi016.omar:3|3.t139
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t6|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t19|dependent|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t39|indirect statement|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t53|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t55|independent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t63|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t66|dependent|transitive passive
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t75|aside|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t88|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t101|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t104|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t129|dependent|transitive passive
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t0|lexical|sed|sed||3.t55|coordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t1|lexical|ne|ne||3.t55|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t2|lexical|cui|quis||3.t6|dative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t3|lexical|vestrum|vos||3.t2|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t4|lexical|mirum|mirus||3.t5|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t5|lexical|esse|sum||3.t6|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t6|lexical|videatur|videor|3.t6|3.t1|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t7|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t8|lexical|me|ego||3.t39|subject||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t9|lexical|in|in||3.t39|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t10|lexical|quaestione|quaestio||3.t9|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t11|lexical|legitima|legitimus||3.t10|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t12|lexical|et|et||3.t9|coordinating conjunction|3.t13|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t13|lexical|in|in||3.t39|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t14|lexical|iudicio|iudicium||3.t13|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t15|lexical|publico|publicus||3.t14|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t16|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t17|lexical|cum|cum||3.t39|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t18|lexical|res|res||3.t19|subject||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t19|lexical|agatur|ago|3.t19|3.t17|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t20|lexical|apud|apud||3.t19|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t21|lexical|praetorem|praetor||3.t20|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t22|lexical|populi|populus||3.t21|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t23|lexical|Romani|Romanus||3.t22|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t24|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t25|lexical|lectissimum|lectus||3.t26|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t26|lexical|virum|vir||3.t21|apposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t27|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t28|lexical|et|et||3.t20|coordinating conjunction|3.t29|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t29|lexical|apud|apud||3.t19|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t30|lexical|severissimos|severus||3.t31|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t31|lexical|iudices|iudex||3.t29|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t32|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t33|lexical|tanto|tantus||3.t34|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t34|lexical|conventu|conventus||3.t19|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t35|lexical|hominum|homo||3.t34|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t36|lexical|ac|ac||3.t34|coordinating conjunction|3.t37|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t37|lexical|frequentia|frequentia||3.t19|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t38|lexical|hoc|hic||3.t40|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t39|lexical|uti|utor|3.t39|3.t6|indirect statement||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t40|lexical|genere|genus||3.t39|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t41|lexical|dicendi|dico||3.t40|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t42|lexical|quod|qui||3.t40|relative pronoun|3.t53|subject
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t43|lexical|non|non||3.t53|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t44|lexical|modo|modo||3.t53|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t45|lexical|a|a||3.t53|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t46|lexical|consuetudine|consuetudo||3.t45|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t47|lexical|iudiciorum|iudicium||3.t46|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t48|lexical|verum|verum||3.t45|coordinating conjunction|3.t50|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t49|lexical|etiam|etiam||3.t53|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t50|lexical|a|a||3.t53|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t51|lexical|forensi|forensis||3.t52|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t52|lexical|sermone|sermo||3.t50|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t53|lexical|abhorreat|abhorreo|3.t53|3.t42|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t54|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t55|lexical|quaeso|quaeso|3.t55|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t56|lexical|a|a||3.t55|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t57|lexical|vobis|vos||3.t56|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t58|lexical|ut|ut||3.t55|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t59|lexical|in|in||3.t63|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t60|lexical|hac|hic||3.t61|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t61|lexical|causa|causa||3.t59|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t62|lexical|mihi|ego||3.t63|dative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t63|lexical|detis|do|3.t63|3.t58|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t64|lexical|hanc|hic||3.t65|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t65|lexical|veniam|venia||3.t63|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t66|lexical|accommodatam|accommodo|3.t66|3.t65|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t67|lexical|huic|hic||3.t68|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t68|lexical|reo|reus||3.t66|dative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t69|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t70|lexical|vobis|vos||3.t78|dative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t71|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t72|lexical|quem|qui||3.t74|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t73|lexical|ad|ad||3.t75|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t74|lexical|modum|modus||3.t73|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t75|lexical|spero|spero|3.t75|3.t63|aside||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t76|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t77|lexical|non|non||3.t78|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t78|lexical|molestam|molestus||3.t65|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t79|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t80|lexical|ut|ut||3.t63|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t81|lexical|me|ego||3.t104|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t82|lexical|pro|pro||3.t88|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t83|lexical|summo|summus||3.t84|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t84|lexical|poeta|poeta||3.t82|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t85|lexical|atque|atque||3.t84|coordinating conjunction|3.t87|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t86|lexical|eruditissimo|eruditus||3.t87|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t87|lexical|homine|homo||3.t82|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t88|lexical|dicentem|dico|3.t88|3.t81|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t89|lexical|hoc|hic||3.t90|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t90|lexical|concursu|concursus||3.t104|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t91|lexical|hominum|homo||3.t90|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t92|lexical|litteratissimorum|litteratus||3.t91|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t93|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t94|lexical|hac|hic||3.t96|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t95|lexical|vestra|vester||3.t96|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t96|lexical|humanitate|humanitas||3.t104|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t97|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t98|lexical|hoc|hic||3.t100|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t99|lexical|denique|denique||3.t104|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t100|lexical|praetore|praetor||3.t104|ablative absolute||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t101|lexical|exercente|exerceo|3.t101|3.t100|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t102|lexical|iudicium|iudicium||3.t101|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t103|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t104|lexical|patiamini|patior|3.t104|3.t80|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t105|lexical|de|de||3.t111|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t106|lexical|studiis|studium||3.t105|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t107|lexical|humanitatis|humanitas||3.t106|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t108|lexical|ac|ac||3.t107|coordinating conjunction|3.t109|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t109|lexical|litterarum|littera||3.t106|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t110|lexical|paulo|paulum||3.t112|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t111|lexical|loqui|loquor||3.t104|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t112|lexical|liberius|libere||3.t111|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t113|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t114|lexical|et|et||3.t111|coordinating conjunction|3.t131|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t115|lexical|in|in||3.t131|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t116|lexical|eius|is||3.t117|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t117|lexical|modi|modus||3.t118|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t118|lexical|persona|persona||3.t115|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t119|lexical|quae|qui||3.t118|relative pronoun|3.t129|subject
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t120|lexical|propter|propter||3.t129|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t121|lexical|otium|otium||3.t120|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t122|lexical|ac|ac||3.t121|coordinating conjunction|3.t123|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t123|lexical|studium|studium||3.t120|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t124|lexical|minime|minime||3.t129|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t125|lexical|in|in||3.t129|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t126|lexical|iudiciis|iudicium||3.t125|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t127|lexical|periculis|periculum||3.t125|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t128|enclitic|que|que||3.t126|coordinating conjunction|3.t127|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t129|lexical|tractata|tracto|3.t129|3.t119|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t130|lexical|est|sum||3.t129|auxiliary||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t131|lexical|uti|utor||3.t104|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t132|lexical|prope|prope||3.t133|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t133|lexical|novo|novus||3.t137|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t134|lexical|quodam|quidam||3.t137|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t135|lexical|et|et||3.t133|coordinating conjunction|3.t136|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t136|lexical|inusitato|inusitatus||3.t137|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t137|lexical|genere|genus||3.t131|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t138|lexical|dicendi|dico||3.t137|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:3|3.t139|punctuation|.||||||

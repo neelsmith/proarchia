@@ -1,0 +1,31 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:5.5.t105-urn:cts:latinLit:phi0474.phi016.omar:5.5.t119
+REASONING=Main clause: "Luculli ... eum domum suam receperunt" — "receperunt" is the independent verb (transitive active), with "Luculli" as subject, "eum" as direct object, "domum" as accusative of place to which (bare accusative, so relationship 'accusative' -> receperunt), "suam" adjectival with "domum", and "statim" adverbial with "receperunt". Dependent clause: "cum praetextatus etiam tum Archias esset" — "cum" is a subordinating conjunction pointing to "receperunt"; "esset" is the dependent verb, a linking verb, with "Archias" as subject and "praetextatus" as predicate (adjective used as predicate complement of the linking verb, i.e. "still wearing the toga praetexta / still a boy"). "etiam" and "tum" are adverbs; "tum" modifies "esset" and "etiam" intensifies "tum" — since the only available label for adverbs points at the verb, both are given 'adverbial' -> "esset". (Minor judgment call: "praetextatus" could be taken as an attributive adjective with "Archias", but with a linking verb "esset" the predicate reading is clearly correct here.)
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t105|urn:cts:latinLit:phi0474.phi016.omar:5|5.t119
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t113|dependent|linking verb
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t118|independent|transitive active
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t105|lexical|statim|statim||5.t118|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t106|lexical|Luculli|Lucullus||5.t118|subject||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t107|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t108|lexical|cum|cum||5.t118|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t109|lexical|praetextatus|praetextatus||5.t113|predicate||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t110|lexical|etiam|etiam||5.t113|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t111|lexical|tum|tum||5.t113|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t112|lexical|Archias|Archias||5.t113|subject||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t113|lexical|esset|sum|5.t113|5.t108|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t114|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t115|lexical|eum|is||5.t118|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t116|lexical|domum|domus||5.t118|accusative||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t117|lexical|suam|suus||5.t116|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t118|lexical|receperunt|recipio|5.t118|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:5|5.t119|punctuation|.||||||

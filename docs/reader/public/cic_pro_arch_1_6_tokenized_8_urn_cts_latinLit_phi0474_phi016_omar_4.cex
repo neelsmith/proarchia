@@ -1,0 +1,75 @@
+#!lm
+MODEL=litellm_proxy/anthropic/Claude Opus 5
+CONTEXT=urn:cts:latinLit:phi0474.phi016.omar:4.4.t39-urn:cts:latinLit:phi0474.phi016.omar:4.4.t93
+REASONING=The sentence is: main clause "nam ... celeriter antecellere omnibus ingeni gloria coepit", with a preceding temporal clause "ut primum ex pueris excessit Archias atque ... se ad scribendi studium contulit" (two coordinated verbs, *excessit* and *contulit*, both governed by "ut (primum)"), inside which sits a relative clause "quibus aetas puerilis ad humanitatem informari solet" (*informari* is a complementary infinitive with *solet*, so it gets no verbal-expression entry of its own). A parenthetical clause introduced by *nam* — "nam ibi natus est loco nobili" — is an independent compound (deponent) perfect, anchored at the participle *natus* with *est* as auxiliary. *antecellere* is a complementary infinitive with *coepit* (no verbal-expression entry); *scribendi* is a gerund in the genitive depending on *studium*. Judgment calls flagged: - *adfluenti* (4.t85): it is coordinated by *atque* with the plain adjectives *celebri* and *copiosa* describing *urbe*, which argues for a purely attributive reading; but it governs two ablatives of its own (*hominibus*, *studiis*) and is genuinely participial in force ("overflowing with..."). Per the instruction to prefer the circumstantial reading when uncertain, I treat it as a predicate/circumstantial participle anchoring its own verbal expression, agreeing with *urbe*. - *Antiochiae* (4.t65) is a locative; there is no dedicated locative label, and its appositive *urbe* is ablative (locative-ablative), so I relate *Antiochiae* to *coepit* with 'ablative'. An alternative would be to leave it unrelated. - *celeriter* (4.t87) could modify either *antecellere* or *coepit*; I attach it to the finite verb *coepit*. - *quibus* (4.t50) is an ablative of means; I attach it to *informari* (the infinitive it actually construes with) rather than to *solet*. - *que* (4.t83), though enclitic on *liberalissimis*, functionally joins the noun phrases *hominibus* and *studiis*.
+
+#!sentences
+context_begin|first_token|context_end|last_token
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t39|urn:cts:latinLit:phi0474.phi016.omar:4|4.t93
+
+#!verbal_units
+context|token|syntactic_type|semantic_type
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t44|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t56|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t62|dependent|transitive active
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t69|independent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t85|dependent|intransitive
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t92|independent|transitive active
+
+#!tokens
+context|id|tokentype|text|lemma|verbalunit|related1|relationship1|related2|relationship2
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t39|lexical|nam|nam||4.t92|coordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t40|lexical|ut|ut||4.t92|subordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t41|lexical|primum|primum||4.t44|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t42|lexical|ex|ex||4.t44|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t43|lexical|pueris|puer||4.t42|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t44|lexical|excessit|excedo|4.t44|4.t40|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t45|lexical|Archias|Archias||4.t44|subject||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t46|lexical|atque|atque||4.t44|coordinating conjunction|4.t62|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t47|lexical|ab|ab||4.t62|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t48|lexical|eis|is||4.t49|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t49|lexical|artibus|ars||4.t47|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t50|lexical|quibus|qui||4.t49|relative pronoun|4.t55|ablative
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t51|lexical|aetas|aetas||4.t56|subject||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t52|lexical|puerilis|puerilis||4.t51|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t53|lexical|ad|ad||4.t55|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t54|lexical|humanitatem|humanitas||4.t53|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t55|lexical|informari|informo||4.t56|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t56|lexical|solet|soleo|4.t56|4.t50|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t57|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t58|lexical|se|sui||4.t62|direct object||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t59|lexical|ad|ad||4.t62|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t60|lexical|scribendi|scribo||4.t61|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t61|lexical|studium|studium||4.t59|object of preposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t62|lexical|contulit|confero|4.t62|4.t40|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t63|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t64|lexical|primum|primum||4.t92|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t65|lexical|Antiochiae|Antiochia||4.t92|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t66|punctuation|—||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t67|lexical|nam|nam||4.t69|coordinating conjunction||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t68|lexical|ibi|ibi||4.t69|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t69|lexical|natus|nascor|4.t69|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t70|lexical|est|sum||4.t69|auxiliary||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t71|lexical|loco|locus||4.t69|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t72|lexical|nobili|nobilis||4.t71|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t73|punctuation|—||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t74|lexical|celebri|celeber||4.t76|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t75|lexical|quondam|quondam||4.t74|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t76|lexical|urbe|urbs||4.t65|apposition||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t77|lexical|et|et||4.t74|coordinating conjunction|4.t78|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t78|lexical|copiosa|copiosus||4.t76|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t79|lexical|atque|atque||4.t78|coordinating conjunction|4.t85|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t80|lexical|eruditissimis|eruditus||4.t81|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t81|lexical|hominibus|homo||4.t85|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t82|lexical|liberalissimis|liberalis||4.t84|adjectival||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t83|enclitic|que|que||4.t81|coordinating conjunction|4.t84|coordinating conjunction
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t84|lexical|studiis|studium||4.t85|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t85|lexical|adfluenti|adfluo|4.t85|4.t76|circumstantial participle||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t86|punctuation|,||||||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t87|lexical|celeriter|celeriter||4.t92|adverbial||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t88|lexical|antecellere|antecello||4.t92|complementary infinitive||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t89|lexical|omnibus|omnis||4.t88|dative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t90|lexical|ingeni|ingenium||4.t91|genitive||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t91|lexical|gloria|gloria||4.t88|ablative||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t92|lexical|coepit|coepi|4.t92|root|unit verb||
+urn:cts:latinLit:phi0474.phi016.omar:4|4.t93|punctuation|.||||||
